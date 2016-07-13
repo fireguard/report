@@ -1,0 +1,22 @@
+{
+  "name": "fireguard/report",
+  "description": "Pacote para gestão de relatórios da Fireguard",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ronaldo Meneguite",
+      "email": "ronaldo@fireguard.com.br"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.9"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Fireguard\\Report\\": "src/Report"
+    }
+  }
+}
