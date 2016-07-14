@@ -51,4 +51,11 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
         $path = rtrim( $this->exporter->getPath(), DIRECTORY_SEPARATOR );
         $this->assertEquals($path.DIRECTORY_SEPARATOR.$this->exporter->getFileName(), $this->exporter->getFullPath());
     }
+
+    public function testSetTimeout()
+    {
+        $exporter = $this->getMockForAbstractClass(Exporter::class);
+        $exporter->setTimeout(100);
+        $this->assertEquals(100, $exporter->getTimeout());
+    }
 }

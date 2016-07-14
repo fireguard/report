@@ -2,6 +2,7 @@
 namespace Fireguard\Report\Exporters;
 
 use Fireguard\Report\Contracts\ExporterContract;
+use Fireguard\Report\Contracts\ReportContract;
 
 abstract class Exporter implements ExporterContract
 {
@@ -16,9 +17,18 @@ abstract class Exporter implements ExporterContract
     protected $fileName;
 
     /**
+     * Path for save file
+     *
      * @var string
      */
     protected $path;
+
+    /**
+     * Time for expire process
+     *
+     * @var int
+     */
+    protected $timeout = 10;
 
     /**
      * ExporterContract constructor.
@@ -32,6 +42,7 @@ abstract class Exporter implements ExporterContract
         $this->setPath($path);
         $this->setFileName($fileName);
         $this->config = $config;
+        $this->initialize();
     }
 
     /**
@@ -98,9 +109,32 @@ abstract class Exporter implements ExporterContract
         return $this->getPath().$this->getFileName();
     }
 
+    /**
+     * @return int
+     */
+    public function getTimeout()
+    {
+        return $this->timeout;
+    }
 
     /**
+     * @param int $timeout
+     * @return Exporter
+     */
+    public function setTimeout($timeout)
+    {
+        $this->timeout = $timeout;
+        return $this;
+    }
+
+    /**
+     * @return void
+     */
+    abstract function initialize();
+
+    /**
+     * @param ReportContract $report
      * @return string
      */
-    abstract function generate();
+    abstract function generate(ReportContract $report);
 }

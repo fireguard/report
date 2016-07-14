@@ -40,9 +40,15 @@ interface ExporterContract
      */
     public function getFullPath();
 
+    /**
+     * @return void
+     */
+    public function initialize();
 
     /**
-     * @return string
+     * @param ReportContract $report
+     * @return string | false
      */
-    public function generate();
+    public function generate(ReportContract $report);
+
 }
