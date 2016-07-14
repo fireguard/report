@@ -2,6 +2,8 @@
 namespace Fireguard\Report\Exporters;
 
 use Fireguard\Report\Contracts\ExporterContract;
+use Fireguard\Report\Contracts\ReportContract;
+use Fireguard\Report\ReportGenerator;
 
 class PdfExporter extends Exporter implements ExporterContract
 {
@@ -15,11 +17,62 @@ class PdfExporter extends Exporter implements ExporterContract
      */
     protected $orientation = 'portrait';
 
+    /**
+     * @var string Path for executable converter html to pdf
+     */
+    protected $binaryPath;
 
-    public function generate()
+    protected $htmlBodyPath = false;
+
+    protected $htmlHeaderPath = false;
+
+    protected $htmlFooterPath = false;
+
+    protected $configOptions = [];
+
+    /**
+     * @var array PhantomJs Params
+     */
+    protected $commandOptions = [];
+
+
+    public function initialize()
     {
-        // TODO
+        $this->configOptions = include __DIR__.'/../../../config/phantom.php';
+        $this->commandOptions = $this->configOptions['defaultOptions'];
     }
+
+    /**
+     * @param ReportContract $report
+     * @return string
+     */
+    public function generate(ReportContract $report)
+    {
+        $this->createHtmlFiles($report);
+        return $this->savePdfFile();
+    }
+
+    protected function createHtmlFiles(ReportContract $report)
+    {
+        $exporter = new HtmlExporter($this->getPath(), $this->fileName.'.html');
+        $this->htmlBodyPath = $exporter->saveFile($report->getContent());
+
+        if ($header = empty($report->getHeader())) {
+            $exporter->setFileName($this->fileName.'-header.html');
+            $this->htmlHeaderPath = $exporter->saveFile($header);
+        }
+
+        if ($footer = empty($report->getFooter())) {
+            $exporter->setFileName($this->fileName.'-footer.html');
+            $this->htmlFooterPath = $exporter->saveFile($footer);
+        }
+    }
+
+    protected function savePdfFile()
+    {
+        return false;
+    }
+
 
     /**
      * @return string
@@ -55,5 +108,65 @@ class PdfExporter extends Exporter implements ExporterContract
         if( in_array($orientation, ['landscape', 'portrait']) ) $this->orientation = $orientation;
         return $this;
     }
-    
+
+    /**
+     * @return array
+     */
+    public function getCommandOptions()
+    {
+        return $this->commandOptions;
+    }
+
+    /**
+     * @param array $options
+     * @return PdfExporter
+     */
+    public function setCommandOptions($options)
+    {
+        $this->commandOptions = $options;
+        return $this;
+    }
+
+    /**
+     * @param string $option
+     * @return PdfExporter
+     */
+    public function addCommandOption($option, $value)
+    {
+        if ( array_key_exists($option, $this->configOptions['validOptions']) ) {
+            $type = $this->configOptions['validOptions'][$option];
+            if (is_array($type)) {
+                if (in_array($value, $type)) $this->commandOptions[$option] = $value;
+            }
+            else {
+                switch ($type) {
+                    case 'string' :
+                        if (!empty($value)) $this->commandOptions[$option] = $value;
+                        break;
+                    case 'bool' :
+                        if (is_bool($value)) $this->commandOptions[$option] = $value;
+                        break;
+                    default:
+                        $this->commandOptions[$option] = $value;
+                        break;
+                }
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return string Command line string
+     */
+    public function mountCommandOptions()
+    {
+        $options = '';
+        foreach ($this->commandOptions as $key => $value) {
+            if ( is_bool($value) ) $value = ($value) ? 'true' : 'false';
+            $options .= '--'.$key.'='.$value.' ';
+        }
+
+        return $options;
+    }
+
 }

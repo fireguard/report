@@ -48,4 +48,45 @@ class PdfExporterTest extends \PHPUnit_Framework_TestCase
         $exporter->setFormat('invalid-orientation');
         $this->assertEquals($this->defaultOrientation, $exporter->getOrientation());
     }
+
+    public function testSetCommandOptions()
+    {
+        $exporter = new PdfExporter();
+        $options = [
+            'debug' => false,
+            'ignore-ssl-errors' => true,
+            'load-images' => true,
+            'ssl-protocol' => 'any'
+        ];
+        $exporter->setCommandOptions($options);
+        $this->assertEquals($options, $exporter->getCommandOptions());
+    }
+
+    public function testAddCommandOption()
+    {
+        $exporter = new PdfExporter();
+        $options = $exporter->getCommandOptions();
+        $exporter->addCommandOption('command-option-include', true);
+        $this->assertEquals($options, $exporter->getCommandOptions());
+
+        $exporter->addCommandOption('web-security', 'invalid-expected-bool');
+        $this->assertEquals($options, $exporter->getCommandOptions());
+
+        $exporter->addCommandOption('disk-cache', true);
+        $this->assertArrayHasKey('disk-cache', $exporter->getCommandOptions());
+    }
+
+    public function testMountCommandLine()
+    {
+        $exporter = new PdfExporter();
+        $options = [
+            'debug' => false,
+            'ignore-ssl-errors' => true,
+            'load-images' => true,
+            'ssl-protocol' => 'any'
+        ];
+        $exporter->setCommandOptions($options);
+        $expected = '--debug=false --ignore-ssl-errors=true --load-images=true --ssl-protocol=any ';
+        $this->assertEquals($expected, $exporter->mountCommandOptions());
+    }
 }
