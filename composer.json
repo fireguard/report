@@ -9,14 +9,26 @@
     }
   ],
   "require": {
-    "php": ">=5.5.9"
+    "php": ">=5.5.9",
+    "jakoch/phantomjs-installer": "2.1.1-p05"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.4"
+  },
+  "config": {
+    "bin-dir": "bin"
   },
   "autoload": {
     "psr-4": {
       "Fireguard\\Report\\": "src/Report"
     }
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "PhantomInstaller\\Installer::installPhantomJS"
+    ],
+    "post-update-cmd": [
+      "PhantomInstaller\\Installer::installPhantomJS"
+    ]
   }
 }
