@@ -1,6 +1,8 @@
 <?php
 namespace Fireguard\Report\Exporters;
 
+use Fireguard\Report\Report;
+
 class PdfExporterTest extends \PHPUnit_Framework_TestCase
 {
     protected $defaultFormat = 'A4';
@@ -86,7 +88,26 @@ class PdfExporterTest extends \PHPUnit_Framework_TestCase
             'ssl-protocol' => 'any'
         ];
         $exporter->setCommandOptions($options);
-        $expected = '--debug=false --ignore-ssl-errors=true --load-images=true --ssl-protocol=any ';
+        $expected = '--debug=false --ignore-ssl-errors=true --load-images=true --ssl-protocol=any';
         $this->assertEquals($expected, $exporter->mountCommandOptions());
+    }
+
+//    public function testMountScriptForExport()
+//    {
+//        $exporter = new PdfExporter();
+//        $file = $exporter->mountScriptForExport();
+//        $expected = 'var fs = require("fs"),args = require("system").args,page = require("webpage").create(); page.content = fs.read(args[1]);page.viewportSize = {width: 600, height: 600};page.paperSize = {format: "'.$exporter->getFormat().'",orientation: "'.$exporter->getOrientation().'",margin: "1cm",footer: {height: "1cm",contents: phantom.callback(function (pageNum, numPages) {return "<div style=\'text-align: right; font-size: 12px;\'>" + pageNum + " / " + numPages + "</div>";})}}; window.setTimeout(function() {page.render(args[1]);phantom.exit();}, 250);';
+//        $this->assertStringEqualsFile($file, $expected);
+//    }
+
+    public function testGeneratePdf()
+    {
+        $exporter = new PdfExporter(__DIR__);
+        $report = new Report(
+            '<section class="content">Content</section>',
+            '<section class="header">Header</section>',
+            '<section class="footer">Footer</section>'
+        );
+        $file = $exporter->generate($report);
     }
 }

@@ -16,9 +16,11 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
 
     public function testExporterConstructor()
     {
-
         $this->assertFileExists($this->exporter->getPath());
-        $this->assertTrue(is_writable($this->exporter->getFullPath()), 'Is not writable path generated');
+        $this->assertTrue( (
+            !file_exists($this->exporter->getFullPath())
+            || is_writable($this->exporter->getFullPath())
+        ), 'Is not writable path generated');
 
         $tmpName = str_replace(sys_get_temp_dir(), '', tempnam(sys_get_temp_dir(), 'test-report'));
         $exporter = $this->getMockForAbstractClass(Exporter::class, ['', $tmpName]);

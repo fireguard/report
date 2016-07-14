@@ -4,6 +4,9 @@ namespace Fireguard\Report\Exporters;
 use Fireguard\Report\Contracts\ExporterContract;
 use Fireguard\Report\Contracts\ReportContract;
 use Fireguard\Report\ReportGenerator;
+use PhantomInstaller\PhantomBinary;
+use RuntimeException;
+use Symfony\Component\Process\Process;
 
 class PdfExporter extends Exporter implements ExporterContract
 {
@@ -39,8 +42,10 @@ class PdfExporter extends Exporter implements ExporterContract
     public function initialize()
     {
         $this->extension = '.pdf';
+
         $this->configOptions = include __DIR__.'/../../../config/phantom.php';
         $this->commandOptions = $this->configOptions['defaultOptions'];
+        $this->binaryPath = PhantomBinary::getBin();
     }
 
     /**
@@ -55,23 +60,42 @@ class PdfExporter extends Exporter implements ExporterContract
 
     protected function createHtmlFiles(ReportContract $report)
     {
-        $exporter = new HtmlExporter($this->getPath(), $this->fileName.'.html');
+        $exporter = new HtmlExporter($this->getPath(), $this->fileName);
         $this->htmlBodyPath = $exporter->saveFile($report->getContent());
 
         if ($header = empty($report->getHeader())) {
-            $exporter->setFileName($this->fileName.'-header.html');
+            $exporter->setFileName($this->fileName.'-header');
             $this->htmlHeaderPath = $exporter->saveFile($header);
         }
 
         if ($footer = empty($report->getFooter())) {
-            $exporter->setFileName($this->fileName.'-footer.html');
+            $exporter->setFileName($this->fileName.'-footer');
             $this->htmlFooterPath = $exporter->saveFile($footer);
         }
     }
 
     protected function savePdfFile()
     {
-        return false;
+        $command = implode(' ', [
+            $this->binaryPath,
+            $this->mountCommandOptions(),
+            $this->mountScriptForExport(),
+            $this->htmlBodyPath,
+            $this->getFullPath()
+        ]);
+
+        $process = new Process($command, $this->getPath());
+        $process->setTimeout($this->timeout);
+        $process->run();
+
+        if ($errorOutput = $process->getErrorOutput()) {
+            throw new RuntimeException('PhantomJS: ' . $errorOutput);
+        }
+
+        // Remove temporary html file
+        if ($this->htmlHeaderPath) @unlink($this->htmlHeaderPath);
+        if ($this->htmlFooterPath) @unlink($this->htmlFooterPath);
+        @unlink($this->htmlBodyPath);
     }
 
 
@@ -167,7 +191,44 @@ class PdfExporter extends Exporter implements ExporterContract
             $options .= '--'.$key.'='.$value.' ';
         }
 
-        return $options;
+        return rtrim($options, ' ');
+    }
+
+    /**
+     * @return string Path for generated script
+     */
+    public function mountScriptForExport()
+    {
+        $script = ' 
+            var fs = require("fs");
+            var args = require("system").args;
+            var page = require("webpage").create();
+            
+            page.viewportSize = {width: 1024, height: 768};
+            
+            page.paperSize = {
+                format: "'.$this->format.'",
+                orientation: "'.$this->orientation.'",
+                margin: "1cm",
+                footer: {
+                    height: "1cm"
+                }
+            };
+            
+            page.open( args[1], function( status ) {
+                console.log( "Status: " + status );
+
+                if ( status === "success" ) {
+                    page.render( args[2] );
+                }
+
+                phantom.exit();
+            });
+            
+        ';
+        $filePath = tempnam(sys_get_temp_dir(), 'report-script-');
+        file_put_contents($filePath, $this->compress($script));
+        return $filePath;
     }
 
 }
