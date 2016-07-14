@@ -44,10 +44,10 @@ abstract class Exporter implements ExporterContract
 
     /**
      * @param string $path
-     * @param string $mode Permission
+     * @param unix_permission $mode Permission
      * @return Exporter
      */
-    public function setPath($path, $mode = '0777')
+    public function setPath($path, $mode = 0777)
     {
         $tmpPath = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
         if ( empty($path)

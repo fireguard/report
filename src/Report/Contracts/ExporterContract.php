@@ -19,10 +19,10 @@ interface ExporterContract
 
     /**
      * @param string $path
-     * @param string $mode Permission
+     * @param unix_permission $mode Permission
      * @return ExporterContract
      */
-    public function setPath($path, $mode = '0777');
+    public function setPath($path, $mode = 0777);
 
     /**
      * @return string
