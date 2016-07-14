@@ -38,6 +38,7 @@ class PdfExporter extends Exporter implements ExporterContract
 
     public function initialize()
     {
+        $this->extension = '.pdf';
         $this->configOptions = include __DIR__.'/../../../config/phantom.php';
         $this->commandOptions = $this->configOptions['defaultOptions'];
     }

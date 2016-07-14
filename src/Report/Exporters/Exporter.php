@@ -17,6 +17,11 @@ abstract class Exporter implements ExporterContract
     protected $fileName;
 
     /**
+     * @var string
+     */
+    protected $extension;
+
+    /**
      * Path for save file
      *
      * @var string
@@ -87,16 +92,13 @@ abstract class Exporter implements ExporterContract
      */
     public function setFileName($fileName)
     {
+        $tmpFileName = $fileName.$this->extension;
         if ( empty($fileName)
-            || (file_exists($this->getPath().$fileName) && !is_writable($this->getPath().$fileName) )
-            || !touch($this->getPath().$fileName)
+            || (file_exists($this->getPath().$tmpFileName) && !is_writable($this->getPath().$tmpFileName) )
         ) {
-            $this->fileName = str_replace(
-                $this->getPath(), '', tempnam( rtrim($this->getPath(), DIRECTORY_SEPARATOR), 'report-')
-            );
+            $this->fileName = 'report-'.sha1(time());
             return $this;
         }
-
         $this->fileName = $fileName;
         return $this;
     }
@@ -106,7 +108,7 @@ abstract class Exporter implements ExporterContract
      */
     public function getFullPath()
     {
-        return $this->getPath().$this->getFileName();
+        return $this->getPath().$this->getFileName().$this->extension;
     }
 
     /**

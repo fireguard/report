@@ -9,6 +9,7 @@ class HtmlExporter extends Exporter implements ExporterContract
 
     public function initialize()
     {
+        $this->extension = '.html';
         // TODO
     }
 
