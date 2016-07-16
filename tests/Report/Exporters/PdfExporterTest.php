@@ -147,9 +147,7 @@ class PdfExporterTest extends \PHPUnit_Framework_TestCase
         );
         $file = $exporter->generate($report);
         $this->assertFileExists($file);
-        $this->assertEquals('6637', filesize($file));
-
-
+        $this->assertTrue( filesize($file) > 1000 , 'Generate file is empty');
     }
 
     /**
@@ -177,7 +175,7 @@ class PdfExporterTest extends \PHPUnit_Framework_TestCase
         );
         $file = $exporter->generate($report);
         $this->assertFileExists($file);
-        $this->assertEquals('6637', filesize($file));
+        $this->assertTrue( filesize($file) > 1000 , 'Generate file is empty');
     }
 
     public function testGeneratePdfOnlyFooter()
@@ -190,7 +188,7 @@ class PdfExporterTest extends \PHPUnit_Framework_TestCase
         );
         $file = $exporter->generate($report);
         $this->assertFileExists($file);
-        $this->assertEquals('6637', filesize($file));
+        $this->assertTrue( filesize($file) > 1000 , 'Generate file is empty');
     }
 
     public function testPrefixerFilePath()
