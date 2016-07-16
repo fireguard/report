@@ -14,5 +14,9 @@ before_script:
 #notifications:
 #    slack: chanel:token
 
+addons:
+    code_climate:
+        repo_token: c70199b1102996ce7de86c5ce4c89a4f308ca496ebb266deb21f41e7f4be75cb
+
 script:
-  - "phpunit --process-isolation"
+  - "phpunit --process-isolation --coverage-clover build/logs/clover.xml"

@@ -5,6 +5,8 @@
 [![Latest Unstable Version](https://poser.pugx.org/fireguard/report/v/unstable)](https://packagist.org/packages/fireguard/report)
 [![Total Downloads](https://poser.pugx.org/fireguard/report/downloads)](https://packagist.org/packages/fireguard/report)
 [![License](https://poser.pugx.org/fireguard/report/license)](https://packagist.org/packages/fireguard/report)
+[![Code Climate](https://codeclimate.com/github/fireguard/report/badges/gpa.svg)](https://codeclimate.com/github/fireguard/report)
+
 
 O Fireguard Report é um pacote para gestão de relatórios em diversos formatos.
 
