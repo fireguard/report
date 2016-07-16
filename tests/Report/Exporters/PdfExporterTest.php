@@ -162,7 +162,7 @@ class PdfExporterTest extends \PHPUnit_Framework_TestCase
             '<section class="footer">Footer</section>'
         );
         $exporter->setBinaryPath('invalid-path');
-        $this->expectException($exporter->generate($report));
+        $exporter->generate($report);
     }
 
 
