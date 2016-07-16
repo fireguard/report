@@ -31,8 +31,6 @@ class PdfExporter extends Exporter implements ExporterContract
 
     protected $htmlFooterPath = false;
 
-    protected $configOptions = [];
-
     /**
      * @var array PhantomJs Params
      */
@@ -43,9 +41,12 @@ class PdfExporter extends Exporter implements ExporterContract
     {
         $this->extension = '.pdf';
 
-        $this->configOptions = include __DIR__.'/../../../config/phantom.php';
-        $this->commandOptions = $this->configOptions['defaultOptions'];
-        $this->binaryPath = PhantomBinary::getBin();
+        $options = include __DIR__.'/../../../config/phantom.php';
+        $this->setConfigDefaultOptions($options['defaultOptions']);
+        $this->setConfigValidOptions($options['validOptions']);
+
+        $this->commandOptions = $this->configDefaultOptions;
+        $this->setBinaryPath(PhantomBinary::getBin());
     }
 
     /**
@@ -80,7 +81,7 @@ class PdfExporter extends Exporter implements ExporterContract
             $this->binaryPath,
             $this->mountCommandOptions(),
             $this->mountScriptForExport(),
-            $this->htmlBodyPath,
+            $this->prefixOsPath($this->htmlBodyPath),
             $this->getFullPath()
         ]);
 
@@ -96,6 +97,8 @@ class PdfExporter extends Exporter implements ExporterContract
         if ($this->htmlHeaderPath) @unlink($this->htmlHeaderPath);
         if ($this->htmlFooterPath) @unlink($this->htmlFooterPath);
         @unlink($this->htmlBodyPath);
+
+        return $this->getFullPath();
     }
 
 
@@ -135,6 +138,23 @@ class PdfExporter extends Exporter implements ExporterContract
     }
 
     /**
+     * @return string
+     */
+    public function getBinaryPath()
+    {
+        return $this->binaryPath;
+    }
+
+    /**
+     * @param $binaryPath
+     * @return PdfExporter
+     */
+    public function setBinaryPath($binaryPath){
+        $this->binaryPath = $binaryPath;
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getCommandOptions()
@@ -158,8 +178,8 @@ class PdfExporter extends Exporter implements ExporterContract
      */
     public function addCommandOption($option, $value)
     {
-        if ( array_key_exists($option, $this->configOptions['validOptions']) ) {
-            $type = $this->configOptions['validOptions'][$option];
+        if ( isset($this->configValidOptions[$option])) {
+            $type = $this->configValidOptions[$option];
             if (is_array($type)) {
                 if (in_array($value, $type)) $this->commandOptions[$option] = $value;
             }
@@ -177,7 +197,23 @@ class PdfExporter extends Exporter implements ExporterContract
                 }
             }
         }
+
         return $this;
+    }
+
+    /**
+     * Prefix the input path for windows versions of PhantomJS
+     * @param string $path
+     * @param string $os
+     * @return string
+     */
+    public function prefixOsPath($path, $os = PHP_OS)
+    {
+        if (strtoupper(substr($os, 0, 3)) === 'WIN') {
+            return 'file:///' . str_replace('\\', '/', $path);
+        }
+
+        return $path;
     }
 
     /**

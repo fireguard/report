@@ -14,9 +14,12 @@
         </testsuite>
     </testsuites>
     <filter>
-        <whitelist>
-            <directory suffix=".php">app/</directory>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src/Report/</directory>
         </whitelist>
+        <blacklist>
+            <directory suffix=".php">./vendor</directory>
+        </blacklist>
     </filter>
 
     <php>

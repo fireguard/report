@@ -36,6 +36,20 @@ abstract class Exporter implements ExporterContract
     protected $timeout = 10;
 
     /**
+     * Config Valid Options file to Exporter Format
+     *
+     * @var array
+     */
+    protected $configValidOptions = [];
+
+    /**
+     * Config Default Options file to Exporter Format
+     *
+     * @var array
+     */
+    protected $configDefaultOptions = [];
+
+    /**
      * ExporterContract constructor.
      * @param string $path
      * @param string $fileName
@@ -126,6 +140,42 @@ abstract class Exporter implements ExporterContract
     public function setTimeout($timeout)
     {
         $this->timeout = $timeout;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfigDefaultOptions()
+    {
+        return $this->configDefaultOptions;
+    }
+
+    /**
+     * @param array $options
+     * @return Exporter
+     */
+    public function setConfigDefaultOptions($options)
+    {
+        $this->configDefaultOptions = $options;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfigValidOptions()
+    {
+        return $this->configValidOptions;
+    }
+
+    /**
+     * @param array $options
+     * @return Exporter
+     */
+    public function setConfigValidOptions($options)
+    {
+        $this->configValidOptions = $options;
         return $this;
     }
 

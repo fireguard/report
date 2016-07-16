@@ -60,4 +60,18 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
         $exporter->setTimeout(100);
         $this->assertEquals(100, $exporter->getTimeout());
     }
+
+    public function testSetConfigDefaultOptions()
+    {
+        $exporter = new PdfExporter();
+        $exporter->setConfigDefaultOptions([]);
+        $this->assertEquals([], $exporter->getConfigDefaultOptions());
+    }
+
+    public function testSetConfigValidOptions()
+    {
+        $exporter = new PdfExporter();
+        $exporter->setConfigValidOptions([]);
+        $this->assertEquals([], $exporter->getConfigValidOptions());
+    }
 }

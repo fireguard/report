@@ -10,7 +10,6 @@ class HtmlExporter extends Exporter implements ExporterContract
     public function initialize()
     {
         $this->extension = '.html';
-        // TODO
     }
 
     public function generate(ReportContract $report)
@@ -22,12 +21,8 @@ class HtmlExporter extends Exporter implements ExporterContract
 
     public function saveFile($content)
     {
-        try {
-            file_put_contents($this->getFullPath(), $content);
-            return $this->getFullPath();
-        } catch (\Exception $e) {
-            return false;
-        }
+        file_put_contents($this->getFullPath(), $content);
+        return $this->getFullPath();
     }
 
 }
