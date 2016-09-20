@@ -17,7 +17,7 @@
     "phpunit/phpunit": "~4.0"
   },
   "config": {
-    "bin-dir": "bin"
+    "bin-dir": "vendor/bin"
   },
   "autoload": {
     "psr-4": {
