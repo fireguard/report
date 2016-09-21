@@ -26,9 +26,9 @@ class PdfExporter extends Exporter implements ExporterContract
 
     protected $htmlBodyPath = false;
 
-    protected $htmlHeaderPath = false;
+    protected $htmlHeader = '';
 
-    protected $htmlFooterPath = false;
+    protected $htmlFooter = '';
 
     /**
      * @var array PhantomJs Params
@@ -56,16 +56,23 @@ class PdfExporter extends Exporter implements ExporterContract
         'webdriver-selenium-grid-hub' => 'string'
     ];
 
+    /**
+     * @param array $config
+     * @return ExporterContract
+     */
     public function configure(array $config = [])
     {
         $this->extension = '.pdf';
         $defaultConfig = $this->getDefaultConfiguration();
         $this->config = array_replace_recursive($defaultConfig['pdf'] , $config);
 
+//        if(!empty($config)) { var_dump($this->config);exit(); }
         $this->setConfigDefaultOptions($this->config['phantom']);
 
         $this->commandOptions = $this->configDefaultOptions;
         $this->setBinaryPath(PhantomBinary::getBin());
+
+        return $this;
     }
 
     /**
@@ -107,8 +114,6 @@ class PdfExporter extends Exporter implements ExporterContract
         }
 
         // Remove temporary html file
-        if ($this->htmlHeaderPath) @unlink($this->htmlHeaderPath);
-        if ($this->htmlFooterPath) @unlink($this->htmlFooterPath);
         @unlink($this->htmlBodyPath);
 
         return $this->getFullPath();
@@ -200,7 +205,7 @@ class PdfExporter extends Exporter implements ExporterContract
      * @param array $options
      * @return PdfExporter
      */
-    public function setCommandOptions($options)
+    public function setCommandOptions(array $options)
     {
         $this->commandOptions = $options;
         return $this;

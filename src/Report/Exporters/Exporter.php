@@ -73,7 +73,7 @@ abstract class Exporter implements ExporterContract
     /**
      * @param string $path
      * @param unix_permission $mode Permission
-     * @return Exporter
+     * @return ExporterContract
      */
     public function setPath($path, $mode = 0777)
     {
@@ -100,7 +100,7 @@ abstract class Exporter implements ExporterContract
 
     /**
      * @param $fileName
-     * @return Exporter
+     * @return ExporterContract
      */
     public function setFileName($fileName)
     {
@@ -133,7 +133,7 @@ abstract class Exporter implements ExporterContract
 
     /**
      * @param int $timeout
-     * @return Exporter
+     * @return ExporterContract
      */
     public function setTimeout($timeout)
     {
@@ -151,7 +151,7 @@ abstract class Exporter implements ExporterContract
 
     /**
      * @param array $options
-     * @return Exporter
+     * @return ExporterContract
      */
     public function setConfigDefaultOptions($options)
     {
@@ -169,9 +169,9 @@ abstract class Exporter implements ExporterContract
 
     /**
      * @param array $options
-     * @return Exporter
+     * @return ExporterContract
      */
-    public function setConfigValidOptions($options)
+    public function setConfigValidOptions(array $options)
     {
         $this->configValidOptions = $options;
         return $this;

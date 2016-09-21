@@ -7,23 +7,18 @@
 [![License](https://poser.pugx.org/fireguard/report/license)](https://packagist.org/packages/fireguard/report)
 [![Code Climate](https://codeclimate.com/github/fireguard/report/badges/gpa.svg)](https://codeclimate.com/github/fireguard/report)
 
-**Other languages for this documentation: [PORTUGUÊS](README_PT.md)**
+**Other languages for this documentation: [ENGLISH](README.md)**
+
 
 <br/>
 O **Fireguard Report** é um pacote para gestão de relatórios em PHP que tem o intuito de auxiliar a exportação 
 de informações em diversos formatos, como HTML e PDF, usando uma interface única de uma forma integrada e simples, 
 usando as tecnologias mais adequadas para cada função.
 
-<!--
-The **Fireguard Report** is a package PHP form management reports that has intention to help export informations
-    in various formats, such HTML and PDF, using a sigle interface an integrated and simple way, using the most 
-    appropriate technologies for each function.
-    -->
-
 <div id='summary'/>
 # Sumário 
 
-- [Installation](#install)
+- [Instalação](#install)
     - [Instalação e Atualização do PhantomJs](#install-phantom)
 - [Como utilizar](#use)
     - [Gerando nosso primeiro relatório](#first-report)
