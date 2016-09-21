@@ -17,7 +17,7 @@ class HtmlExporterTest extends \PHPUnit_Framework_TestCase
         );
         $file = $exporter->generate($report);
         $this->assertFileExists($file);
-        $expectHtml = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>'.$exporter->getFileName().'</title></head><body><section class="header">Header</section><section class="content">Content</section><section class="footer">Footer</section></body></html>';
+        $expectHtml = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>'.$exporter->getFileName().'</title></head><body><section class=\'header\'>Header</section><section class="content">Content</section><section class=\'footer\'>Footer</section></body></html>';
         $this->assertStringEqualsFile($file, $expectHtml);
     }
 
@@ -30,7 +30,7 @@ class HtmlExporterTest extends \PHPUnit_Framework_TestCase
         );
         $file = $exporter->generate($report);
         $this->assertFileExists($file);
-        $expectHtml = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>'.$exporter->getFileName().'</title></head><body><section class="header">Header</section><section class="content">Content</section></body></html>';
+        $expectHtml = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>'.$exporter->getFileName().'</title></head><body><section class=\'header\'>Header</section><section class="content">Content</section></body></html>';
         $this->assertStringEqualsFile($file, $expectHtml);
     }
 
@@ -44,7 +44,7 @@ class HtmlExporterTest extends \PHPUnit_Framework_TestCase
         );
         $file = $exporter->generate($report);
         $this->assertFileExists($file);
-        $expectHtml = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>'.$exporter->getFileName().'</title></head><body><section class="content">Content</section><section class="footer">Footer</section></body></html>';
+        $expectHtml = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>'.$exporter->getFileName().'</title></head><body><section class="content">Content</section><section class=\'footer\'>Footer</section></body></html>';
         $this->assertStringEqualsFile($file, $expectHtml);
     }
 
