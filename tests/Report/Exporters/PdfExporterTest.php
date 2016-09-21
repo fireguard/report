@@ -5,14 +5,28 @@ use Fireguard\Report\Report;
 
 class PdfExporterTest extends \PHPUnit_Framework_TestCase
 {
-    protected $defaultFormat = 'A4';
+    /**
+     * @var PdfExporter
+     */
+    protected $exporter;
 
-    protected $defaultOrientation = 'portrait';
+    /**
+     * @var array
+     */
+    protected $configDefault;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->exporter = new PdfExporter();
+        $tmpConfig = $this->exporter->getDefaultConfiguration();
+        $this->configDefault = $tmpConfig['pdf'];
+    }
 
     public function testGetDefaultFormat()
     {
         $exporter = new PdfExporter();
-        $this->assertEquals($this->defaultFormat, $exporter->getFormat());
+        $this->assertEquals($this->configDefault['page']['format'], $exporter->getFormat());
     }
 
     public function testSetValidFormat()
@@ -27,13 +41,13 @@ class PdfExporterTest extends \PHPUnit_Framework_TestCase
     {
         $exporter = new PdfExporter();
         $exporter->setFormat('invalid-format');
-        $this->assertEquals($this->defaultFormat, $exporter->getFormat());
+        $this->assertEquals($this->configDefault['page']['format'], $exporter->getFormat());
     }
 
     public function testGetDefaultOrientation()
     {
         $exporter = new PdfExporter();
-        $this->assertEquals($this->defaultOrientation, $exporter->getOrientation());
+        $this->assertEquals($this->configDefault['page']['orientation'], $exporter->getOrientation());
     }
 
     public function testSetValidOrientation()
@@ -48,7 +62,24 @@ class PdfExporterTest extends \PHPUnit_Framework_TestCase
     {
         $exporter = new PdfExporter();
         $exporter->setFormat('invalid-orientation');
-        $this->assertEquals($this->defaultOrientation, $exporter->getOrientation());
+        $this->assertEquals($this->configDefault['page']['orientation'], $exporter->getOrientation());
+    }
+
+    public function testGetMargin()
+    {
+        $exporter = new PdfExporter();
+        $this->assertEquals($this->configDefault['page']['margin'], $exporter->getMargin());
+    }
+
+    public function testSetMargin()
+    {
+        $exporter = new PdfExporter();
+        $exporter->setMargin('{top: "0px", right: "0px", bottom: "0px", left: "0px"}');
+        $this->assertEquals('{top: "0px", right: "0px", bottom: "0px", left: "0px"}', $exporter->getMargin());
+
+        $exporter->setMargin('5px');
+        $this->assertEquals('"5px"', $exporter->getMargin());
+
     }
 
     public function testSetCommandOptions()
@@ -200,5 +231,25 @@ class PdfExporterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/var/www', $exporter->prefixOsPath('/var/www'), 'LINUX');
 
         $this->assertEquals('file:///c:/www', $exporter->prefixOsPath('c:/www', 'WIN'));
+    }
+
+    public function testGetFooterHeight()
+    {
+        $exporter = new PdfExporter();
+        $exporter->configure(['footer' => ['height' => '0px']]);
+        $this->assertEquals('0px', $exporter->getFooterHeight());
+
+        $exporter->configure(['footer' => ['height' => '100px']]);
+        $this->assertEquals('100px', $exporter->getFooterHeight());
+    }
+
+    public function testGetHeaderHeight()
+    {
+        $exporter = new PdfExporter();
+        $exporter->configure(['header' => ['height' => '0px']]);
+        $this->assertEquals('0px', $exporter->getHeaderHeight());
+
+        $exporter->configure(['header' => ['height' => '100px']]);
+        $this->assertEquals('100px', $exporter->getHeaderHeight());
     }
 }

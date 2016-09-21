@@ -59,13 +59,10 @@ class PdfExporter extends Exporter implements ExporterContract
     public function configure(array $config = [])
     {
         $this->extension = '.pdf';
+        $defaultConfig = $this->getDefaultConfiguration();
+        $this->config = array_replace_recursive($defaultConfig['pdf'] , $config);
 
-        if (empty($config)) {
-            $this->config = $this->getDefaultConfiguration();
-        }
-        $this->config = array_merge($this->getDefaultConfiguration(), $config);
-
-        $this->setConfigDefaultOptions($this->config['pdf']['phantom']);
+        $this->setConfigDefaultOptions($this->config['phantom']);
 
         $this->commandOptions = $this->configDefaultOptions;
         $this->setBinaryPath(PhantomBinary::getBin());
@@ -86,15 +83,9 @@ class PdfExporter extends Exporter implements ExporterContract
         $exporter = new HtmlExporter($this->getPath(), $this->fileName);
         $this->htmlBodyPath = $exporter->saveFile($report->getContent());
 
-        if ($header = empty($report->getHeader())) {
-            $exporter->setFileName($this->fileName.'-header');
-            $this->htmlHeaderPath = $exporter->saveFile($header);
-        }
+        $this->htmlHeader = $this->processInlineHtml($report->getHeader());
 
-        if ($footer = empty($report->getFooter())) {
-            $exporter->setFileName($this->fileName.'-footer');
-            $this->htmlFooterPath = $exporter->saveFile($footer);
-        }
+        $this->htmlFooter = $this->processInlineHtml($report->getFooter());
     }
 
     protected function savePdfFile()
@@ -129,7 +120,7 @@ class PdfExporter extends Exporter implements ExporterContract
      */
     public function getFormat()
     {
-        return $this->format;
+        return !empty($this->config['page']['format']) ? $this->config['page']['format'] : 'A4';
     }
 
     /**
@@ -138,7 +129,7 @@ class PdfExporter extends Exporter implements ExporterContract
      */
     public function setFormat($format)
     {
-        if (in_array($format, ['A4', 'A3', 'Letter']) ) $this->format = $format;
+        if (in_array($format, ['A4', 'A3', 'Letter']) ) $this->config['page']['format'] = $format;
         return $this;
     }
 
@@ -147,7 +138,7 @@ class PdfExporter extends Exporter implements ExporterContract
      */
     public function getOrientation()
     {
-        return $this->orientation;
+        return $this->config['page']['orientation'];
     }
 
     /**
@@ -155,10 +146,31 @@ class PdfExporter extends Exporter implements ExporterContract
      * @return PdfExporter
      */
     public function setOrientation($orientation){
-        if( in_array($orientation, ['landscape', 'portrait']) ) $this->orientation = $orientation;
+        if( in_array($orientation, ['landscape', 'portrait']) ) $this->config['page']['orientation'] = $orientation;
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getMargin()
+    {
+        return !empty($this->config['page']['margin'])
+            ? $this->config['page']['margin']
+            : '{top: "20px", right: "20px", bottom: "20px", left: "20px"}';
+    }
+
+    /**
+     * @param string $margin
+     * @return PdfExporter
+     */
+    public function setMargin($margin)
+    {
+        $this->config['page']['margin'] =(str_replace('{', '', $margin) == $margin) ? '"'.$margin.'"' : $margin;
+        return $this;
+    }
+
+    /**
     /**
      * @return string
      */
@@ -262,15 +274,18 @@ class PdfExporter extends Exporter implements ExporterContract
             var args = require("system").args;
             var page = require("webpage").create();
             
-            page.viewportSize = {width: 1024, height: 768};
+            page.viewportSize = { width: '.$this->getViewPortWidth().', height: '.$this->getViewPortHeight().'};
             
             page.paperSize = {
-                format: "'.$this->format.'",
-                orientation: "'.$this->orientation.'",
-                margin: "1cm",
+                format: "'.$this->getFormat().'",
+                orientation: "'.$this->getOrientation().'",
+                margin: '.$this->getMargin().',
                 footer: {
-                    height: "1cm"
-                }
+                    '.$this->getFooterScript().'
+                },
+                header: {
+                    '.$this->getHeaderScript().'
+                },
             };
             
             page.open( args[1], function( status ) {
@@ -282,10 +297,58 @@ class PdfExporter extends Exporter implements ExporterContract
 
                 phantom.exit();
             });
+            
         ';
         $filePath = tempnam(sys_get_temp_dir(), 'report-script-');
         file_put_contents($filePath, $this->compress($script));
         return $filePath;
     }
 
+    public function getFooterHeight()
+    {
+        return isset($this->config['footer']['height']) ? $this->config['footer']['height'] : '25px';
+    }
+
+    public function getHeaderHeight()
+    {
+
+        return isset($this->config['header']['height']) ? $this->config['header']['height'] : '45px';
+    }
+
+    protected function getHeaderScript()
+    {
+        if (empty($this->htmlHeader)) return '';
+        $header = 'height: "'.$this->getHeaderHeight().'",';
+        $header.= 'contents: phantom.callback(function(numPage, totalPages) {';
+        $header.= ' return "'.$this->htmlHeader.'";';
+        $header.= '})';
+        return $header;
+    }
+
+    protected function getFooterScript()
+    {
+        if (empty($this->htmlFooter)) return '';
+        $footer = 'height: "'.$this->getFooterHeight().'",';
+        $footer.= 'contents: phantom.callback(function(numPage, totalPages) {';
+        $footer.= ' return "'.$this->htmlFooter.'";"';
+        $footer.= '"})';
+        return $footer;
+    }
+
+    protected function getViewPortWidth()
+    {
+        return $this->config['page']['orientation'] == 'landscape' ? '3508' : '2480';
+    }
+
+    protected function getViewPortHeight()
+    {
+        return $this->config['page']['orientation'] == 'landscape' ? '2480' : '3508';
+    }
+
+    protected function processInlineHtml($html)
+    {
+        $clearHtml = str_replace('"', '\'', $html);
+        $clearHtml = str_replace("@{{", '" + ', $clearHtml);
+        return $this->compress(str_replace("}}", ' + "', $clearHtml));
+    }
 }
