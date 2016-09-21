@@ -54,14 +54,12 @@ abstract class Exporter implements ExporterContract
      * @param string $path
      * @param string $fileName
      * @param array $config
-     * @return Exporter
      */
     public function __construct($path = '', $fileName = '', $config = [])
     {
+        $this->configure($config);
         $this->setPath($path);
         $this->setFileName($fileName);
-        $this->config = $config;
-        $this->initialize();
     }
 
     /**
@@ -179,19 +177,33 @@ abstract class Exporter implements ExporterContract
         return $this;
     }
 
+    public function getDefaultConfiguration()
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $path = __DIR__.$ds.'..'.$ds.'..'.$ds.'..'.$ds.'config'.$ds.'report.php';
+        return file_exists($path) ? include $path : [];
+    }
+
+    /**
+     * Compress html e js removed comments e break lines
+     * @param $buffer
+     * @return mixed
+     */
     public function compress($buffer)
     {
         // remove comments
         $buffer = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $buffer);
+
         // remove tabs, spaces, newlines, etc.
         $buffer = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '   ', '    '), '', $buffer);
-        return $buffer;
+        return trim($buffer);
     }
 
     /**
-     * @return void
+     * @param array $config
+     * @return ExporterContract
      */
-    abstract function initialize();
+    abstract public function configure(array $config);
 
     /**
      * @param ReportContract $report

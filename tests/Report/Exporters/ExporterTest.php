@@ -5,7 +5,7 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var Exporter
      */
     protected $exporter;
 
@@ -73,5 +73,25 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
         $exporter = new PdfExporter();
         $exporter->setConfigValidOptions([]);
         $this->assertEquals([], $exporter->getConfigValidOptions());
+    }
+
+    public function testCompressHtmlAndJsStrings()
+    {
+        // Test Remove Space
+        $html = '<h1>Teste</h1>'.PHP_EOL.'<span>Teste</span>';
+        $this->assertEquals('<h1>Teste</h1><span>Teste</span>', $this->exporter->compress($html));
+
+        // Test Remove Coments
+        $comment = '/**'.PHP_EOL.'* Compress html e js removed comments e break lines'.PHP_EOL;
+        $comment.= '* @param $buffer'.PHP_EOL.'* @return mixed'.PHP_EOL.'*/ function test()';
+        $this->assertEquals('function test()', $this->exporter->compress($comment));
+    }
+
+    public function testGetDefaultConfiguration()
+    {
+        $config = $this->exporter->getDefaultConfiguration();
+        $this->assertArrayHasKey('pdf', $config);
+        $this->assertArrayHasKey('phantom', $config['pdf']);
+        $this->assertArrayHasKey('html', $config);
     }
 }

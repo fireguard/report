@@ -41,9 +41,17 @@ interface ExporterContract
     public function getFullPath();
 
     /**
-     * @return void
+     * @param array $config
+     * @return ExporterContract
      */
-    public function initialize();
+    public function configure(array $config);
+
+    /**
+     * Compress html e js removed comments e break lines
+     * @param $buffer
+     * @return mixed
+     */
+    public function compress($buffer);
 
     /**
      * @param ReportContract $report

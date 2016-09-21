@@ -3,7 +3,6 @@ namespace Fireguard\Report\Exporters;
 
 use Fireguard\Report\Contracts\ExporterContract;
 use Fireguard\Report\Contracts\ReportContract;
-use Fireguard\Report\ReportGenerator;
 use PhantomInstaller\PhantomBinary;
 use RuntimeException;
 use Symfony\Component\Process\Process;
@@ -36,14 +35,37 @@ class PdfExporter extends Exporter implements ExporterContract
      */
     protected $commandOptions = [];
 
+    protected $configValidOptions = [
+        'debug' => 'bool',
+        'cookies-file' => 'string',
+        'disk-cache' => 'bool',
+        'load-images' => 'bool',
+        'local-storage-path' => 'string',
+        'local-storage-quota' => 'integer',
+        'local-to-remote-url-access' => 'bool',
+        'max-disk-cache-size' => 'integer', //in KB
+        'output-encoding' => 'string',
+        'proxy' => 'string', //192.168.1.42:8080
+        'proxy-type' => ['http', 'socks5', 'none'],
+        'proxy-auth' => 'string', //username:password
+        'script-encoding' => 'script',
+        'ssl-protocol' => [ 'sslv3', 'sslv2', 'tlsv1', 'any'],
+        'ssl-certificates-path' => 'string',
+        'web-security' => 'bool',
+        'webdriver' => 'string',
+        'webdriver-selenium-grid-hub' => 'string'
+    ];
 
-    public function initialize()
+    public function configure(array $config = [])
     {
         $this->extension = '.pdf';
 
-        $options = include __DIR__.'/../../../config/phantom.php';
-        $this->setConfigDefaultOptions($options['defaultOptions']);
-        $this->setConfigValidOptions($options['validOptions']);
+        if (empty($config)) {
+            $this->config = $this->getDefaultConfiguration();
+        }
+        $this->config = array_merge($this->getDefaultConfiguration(), $config);
+
+        $this->setConfigDefaultOptions($this->config['pdf']['phantom']);
 
         $this->commandOptions = $this->configDefaultOptions;
         $this->setBinaryPath(PhantomBinary::getBin());
@@ -260,7 +282,6 @@ class PdfExporter extends Exporter implements ExporterContract
 
                 phantom.exit();
             });
-            
         ';
         $filePath = tempnam(sys_get_temp_dir(), 'report-script-');
         file_put_contents($filePath, $this->compress($script));

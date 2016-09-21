@@ -7,9 +7,10 @@ use Fireguard\Report\Contracts\ReportContract;
 class HtmlExporter extends Exporter implements ExporterContract
 {
 
-    public function initialize()
+    public function configure(array $config = [])
     {
         $this->extension = '.html';
+        $this->config = $config;
     }
 
     public function generate(ReportContract $report)

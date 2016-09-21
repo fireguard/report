@@ -3,3 +3,4 @@
 /.idea
 phpDocumentor.phar
 bin/
+/docs
