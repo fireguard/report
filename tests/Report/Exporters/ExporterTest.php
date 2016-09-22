@@ -79,7 +79,7 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
     {
         // Test Remove Space
         $html = '<h1>Teste</h1>'.PHP_EOL.'<span>Teste</span>';
-        $this->assertEquals('<h1>Teste</h1><span>Teste</span>', $this->exporter->compress($html));
+        $this->assertEquals('<h1>Teste</h1> <span>Teste</span>', $this->exporter->compress($html));
 
         // Test Remove Coments
         $comment = '/**'.PHP_EOL.'* Compress html e js removed comments e break lines'.PHP_EOL;

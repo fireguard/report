@@ -226,9 +226,7 @@ class PdfExporterTest extends \PHPUnit_Framework_TestCase
     {
         $exporter = new PdfExporter();
 
-        $this->assertEquals('/var/www', $exporter->prefixOsPath('/var/www'));
-
-        $this->assertEquals('/var/www', $exporter->prefixOsPath('/var/www'), 'LINUX');
+        $this->assertEquals('/var/www', $exporter->prefixOsPath('/var/www', 'LINUX'));
 
         $this->assertEquals('file:///c:/www', $exporter->prefixOsPath('c:/www', 'WIN'));
     }
