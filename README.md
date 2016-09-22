@@ -7,9 +7,7 @@
 [![License](https://poser.pugx.org/fireguard/report/license)](https://packagist.org/packages/fireguard/report)
 [![Code Climate](https://codeclimate.com/github/fireguard/report/badges/gpa.svg)](https://codeclimate.com/github/fireguard/report)
 
-**Other languages for this documentation: [PORTUGUÊS](README_PT.md)**
-
-<br/>
+<!-- **Other languages for this documentation: [PORTUGUÊS](README_PT.md)**-->
 O **Fireguard Report** é um pacote para gestão de relatórios em PHP que tem o intuito de auxiliar a exportação 
 de informações em diversos formatos, como HTML e PDF, usando uma interface única de uma forma integrada e simples, 
 usando as tecnologias mais adequadas para cada função.
@@ -23,7 +21,7 @@ The **Fireguard Report** is a package PHP form management reports that has inten
 <div id='summary'/>
 # Sumário 
 
-- [Installation](#install)
+- [Instalação](#install)
     - [Instalação e Atualização do PhantomJs](#install-phantom)
 - [Como utilizar](#use)
     - [Gerando nosso primeiro relatório](#first-report)
@@ -31,13 +29,13 @@ The **Fireguard Report** is a package PHP form management reports that has inten
     - [Exporters](#exporters)
         - [Métodos disponíveis em todos os Exports](#methods-exports)
         - [PdfExporter](#pdf-exporter)
-        - [PdfExporter](#html-exporter)
+        - [HtmlExporter](#html-exporter)
 - [Exemplos de Uso](#examples)
     - [Gerando um relatório em PDF](examples/report1-pdf.php)
     - [Gerando um relatório em HTML](examples/report1-html.php)
 
 
-# <span id="install" />Instalação
+# <div id="install" />Instalação
 
 Fireguard Report pode ser instalado através do composer. 
 
@@ -58,7 +56,7 @@ ou se preferir, adicione o seguinte trecho manualmente:
 }
 ```
 
-## <span id="install-phantom"/>Instalação e Atualização do PhantomJs 
+## <div id="install-phantom"/>Instalação e Atualização do PhantomJs 
 
 Para gerar os arquivos PDF esta pacote utiliza-se do PhantomJs, para a instalação e atualização do mesmo sugerimos duas opções:
 
@@ -92,9 +90,9 @@ E executar sempre que quiser atualizar a versão do executável o seguinte coman
 Caso opte por essa opção, deverá executar ao menos a primeira vez para que o mesmo seja instalado.
 
 
-# <span id="use"/>Como utilizar
+# <div id="use"/>Como utilizar
 
-## <span id="first-report"/>Gerando nosso primeiro relatório
+## <div id="first-report"/>Gerando nosso primeiro relatório
 
 A utilização desse pacote é bastante simples, precisaremos de dois objetos para gerarmos um arquivo final, o primeiro é Report, 
 com ele definimos o conteúdo efetivo do relatório, o segundo é o Exporter, que recebe um Report e é responsável por tratar 
@@ -110,7 +108,7 @@ Abaixo um exemplo simples para gerar um arquivo:
 
 Assim ao término da execução, na variável $file teremos o caminho real para o arquivo gerado.
 
-## <span id="footer-header" />Cabeçalho e Rodapé
+## <div id="footer-header" />Cabeçalho e Rodapé
 
 Para o html do cabeçalho e rodapé duas variáveis estão disponíveis em exporters que usam paginação, como é o caso do 
 PdfExporter, o **numPage** e o **totalPages**, que contém a página atual e o total de páginas do relatório respectivamente. 
@@ -135,7 +133,7 @@ Abaixo um exemplo simples que irá se utilizar do cabeçalho e rodapé;
 ```
 Com esse exemplo acima encontraremos na variável **$file** o caminho para o arquivo PDF gerado;
 
-## <span id="exporters" />Exporters
+## <div id="exporters" />Exporters
 
 Como vimos nos exemplos anteriores, para a exportação do relatório é necessário uma classe Exporter. Um Exporter é na 
 verdade é uma classe especializada, que implementa uma interface Exporter e que é responsável por pegar um Report e o 
@@ -145,7 +143,7 @@ Nesse momento incluímos neste pacote dois Exporters, um para HTML e um para PDF
 Exporters estejam disponíveis, inclusive incentivamos que desenvolvam novos exporters, e se possível contribuam com o 
 projeto, assim disponibilizamos para todos um leque maior de possibilidades.
 
-### <span id="methods-exports" />Métodos disponíveis em todos os Exports
+### <div id="methods-exports" />Métodos disponíveis em todos os Exports
 
 ``getPath()``: Retorna o local onde o arquivo gerado será salvo;
 
@@ -174,7 +172,7 @@ $file = $exporter
             ->generate($report); // Gera o relatório
 ```
 
-### PdfExport
+### <div id="pdf-exporter" />PdfExport
 
 Para a exportação de arquivos no formato de **PDF**, além dos métodos padrões, alguns outros estão disponíveis, abaixo é 
 listado alguns deles:
@@ -206,14 +204,14 @@ listado alguns deles:
 ``getFooterHeight()``: Retorna o tamanho do rodapé definido;
 
 
-### HtmlExport
+### <div id="html-exporter" />HtmlExport
 
 Para a exportação de arquivos no formato de **HTML**, além dos métodos padrões, alguns outros estão disponíveis, abaixo é 
 listado alguns deles:
 
 ``saveFile($content)``: Salva o arquivo HTML e retorna o caminho completo para o arquivo gerado;
 
-# <span id="examples" />Exemplos de Uso
+# <div id="examples" />Exemplos de Uso
 <br />
 
 - <a href="examples/report1-pdf.php" target="_blank">Gerando um relatório em PDF</a>

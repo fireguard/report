@@ -143,7 +143,7 @@ class PdfExporter extends Exporter implements ExporterContract
      */
     public function getOrientation()
     {
-        return $this->config['page']['orientation'];
+        return !empty($this->config['page']['orientation']) ? $this->config['page']['orientation'] : 'portrait';
     }
 
     /**
