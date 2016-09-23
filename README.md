@@ -314,5 +314,5 @@ arquivo de configuração ```report.php`` gerado na integração. Veja abaixo al
 
 - <a href="examples/report1-pdf.php" target="_blank" id="use-link-pdf"> Gerando um relatório em PDF</a>
 - <a href="examples/report1-html.php" target="_blank" id="use-link-html"> Gerando um relatório em HTML</a>
-- <a href="examples/report-boleto.php" target="_blank" id="use-link-boleto"> Boleto de exemplo gerado com este package</a>
+- <a href="examples/report-boleto.pdf" target="_blank" id="use-link-boleto"> Boleto de exemplo gerado com este package</a>
 <br /><br />
