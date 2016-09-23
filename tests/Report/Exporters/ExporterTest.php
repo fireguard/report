@@ -25,8 +25,6 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
         $tmpName = str_replace(sys_get_temp_dir(), '', tempnam(sys_get_temp_dir(), 'test-report'));
         $exporter = $this->getMockForAbstractClass(Exporter::class, ['', $tmpName]);
         $this->assertEquals($tmpName, $exporter->getFileName());
-        $this->assertTrue(is_writable($exporter->getFullPath()), 'Is not writable manual path generated');
-        unlink($exporter->getFullPath());
     }
 
     public function testSetPath()
@@ -35,8 +33,6 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
         $path = sys_get_temp_dir().DIRECTORY_SEPARATOR.sha1(time()).DIRECTORY_SEPARATOR;
         $exporter->setPath($path);
         $this->assertEquals($path, $exporter->getPath());
-        $this->assertTrue(is_writable($exporter->getFullPath()), 'Is not writable manual path generated');
-        unlink($exporter->getFullPath());
     }
 
     public function testSetFileName()

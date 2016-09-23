@@ -12,6 +12,7 @@ class HtmlExporter extends Exporter implements ExporterContract
         $this->extension = '.html';
         $defaultConfig = $this->getDefaultConfiguration();
         $this->config = array_replace_recursive($defaultConfig['html'] , $config);
+        return $this;
     }
 
     public function generate(ReportContract $report)

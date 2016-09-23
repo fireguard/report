@@ -80,7 +80,7 @@ abstract class Exporter implements ExporterContract
         $tmpPath = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
         if ( empty($path)
             || ( !file_exists($path) && !mkdir($path, $mode, true) )
-            || ( !empty($this->fileName) && !(touch($tmpPath.$this->getFileName(), $mode)))
+//            || ( !empty($this->fileName) && !(touch($tmpPath.$this->getFileName(), $mode)))
         ) {
             $this->path = sys_get_temp_dir().DIRECTORY_SEPARATOR;
             return $this;
