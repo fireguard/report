@@ -9,8 +9,8 @@
 
 <!-- **Other languages for this documentation: [PORTUGUÊS](README_PT.md)**-->
 O **Fireguard Report** é um pacote para gestão de relatórios em PHP que tem o intuito de auxiliar a exportação 
-de informações em diversos formatos, como HTML e PDF, usando uma interface única de uma forma integrada e simples, 
-usando as tecnologias mais adequadas para cada função.
+de informações em diversos formatos, como HTML e PDF, usando para isso de uma interface única, integrada e simples, 
+com as tecnologias mais adequadas para cada função.
 
 <!--
 The **Fireguard Report** is a package PHP form management reports that has intention to help export informations
@@ -30,15 +30,19 @@ The **Fireguard Report** is a package PHP form management reports that has inten
         - [Métodos disponíveis em todos os Exports](#methods-exports)
         - [PdfExporter](#pdf-exporter)
         - [HtmlExporter](#html-exporter)
-- [Exemplos de Uso](#examples)
-    - [Gerando um relatório em PDF](examples/report1-pdf.php)
-    - [Gerando um relatório em HTML](examples/report1-html.php)
-    - [Boleto de exemplo gerado com este package](examples/report-boleto.php)
+- [Laravel](#laravel)
+    - [Registrando Service Provider](#laravel-register-provider)
+    - [Publicando o arquivo de configuração](#laravel-publish-config)
+    - [Exemplos de uso com Laravel (Dependency Injection)](#laravel-use)
+- [Outros exemplos de uso](#examples)
+    - [Gerando um relatório em PDF](#use-link-pdf)
+    - [Gerando um relatório em HTML](#use-link-html)
+    - [Boleto de exemplo gerado com este package](#use-link-boleto)
 
 
 # <div id="install" />Instalação
 
-Fireguard Report pode ser instalado através do composer. 
+O Fireguard Report pode ser instalado através do composer. 
 
 Para que o package seja adicionado automaticamente ao seu arquivo composer.json execute o seguinte comando:
 
@@ -59,7 +63,8 @@ ou se preferir, adicione o seguinte trecho manualmente:
 
 ## <div id="install-phantom"/>Instalação e Atualização do PhantomJs 
 
-Para gerar os arquivos PDF esta pacote utiliza-se do PhantomJs, para a instalação e atualização do mesmo sugerimos duas opções:
+Para gerar os arquivos PDF este pacote utiliza-se do PhantomJs> Para a instalação e atualização do mesmo, sugerimos duas 
+opções:
 
 **1ª Opção:**  Adicionar as linhas abaixo no arquivo composer.json, dessa forma o processo de instalação e atualização 
 acontecerá sempre que executar os comandos "composer install" e "composer update".
@@ -205,18 +210,109 @@ listado alguns deles:
 ``getFooterHeight()``: Retorna o tamanho do rodapé definido;
 
 
-### <div id="html-exporter" />HtmlExport
+### <div id="html-exporter" /> HtmlExport
 
 Para a exportação de arquivos no formato de **HTML**, além dos métodos padrões, alguns outros estão disponíveis, abaixo é 
 listado alguns deles:
 
 ``saveFile($content)``: Salva o arquivo HTML e retorna o caminho completo para o arquivo gerado;
 
-# <div id="examples" />Exemplos de Uso
+# <div id="laravel" /> Laravel
+
+Os passos descritos abaixo são opcionais e apenas podem facilitar para quem pretente usar este package com o Laravel 5.
+
+## <div id="laravel-register-provider" /> Registrando Service Provider
+
+No arquivo de configuração ``config\app.php``, registre acima dos providers de sua aplicação como segue abaixo:
+
+```
+'providers' => [
+    Fireguard\Report\Laravel\ReportServiceProvider::class
+]
+```
+
+## <div id="laravel-publish-config" /> Publicando o arquivo de configuração
+
+Para publicar o arquivo de configuração deve-se usar o seguinte comando:
+```
+php artisan vendor:publish --provider="Fireguard\Report\Laravel\ReportServiceProvider"
+```
+
+## <div id="laravel-use" /> Exemplos de uso com Laravel (Dependency Injection)
+
+Com o registro do service provider, agora pode-se usar a injeção de dependência do Laravel para resolver os exporters,
+já os trazendo prontos e configurados o arquivo de configuração da aplicação. 
+
+Para a injeção de dependência é disponibilidado três classes, sendo uma interface e duas classes concretas, a interface
+por padrão é resolvida para a classe concreta PdfExporter, o que pode ser alterado no parâmetro ``default-exporter`` do 
+arquivo de configuração ```report.php`` gerado na integração. Veja abaixo alguns exemplos de uso.
+
+### <div id="laravel-injection-interface" /> Exporter Interface
+
+```php
+    public function index (\Fireguard\Report\Exporters\Exporter $exporter)
+    {
+        $html = view()->make('welcome')->render();
+        $file = $exporter->generate(new Report($html));
+
+        $headers = [
+            'Content-type' => mime_content_type($file),
+            'Content-Transfer-Encoding' => 'binary',
+            'Content-Length' => filesize($file),
+            'Accept-Ranges' => 'bytes'
+        ];
+
+        // Caso queira mostrar diretamente o arquivo
+        return response()->make(file_get_contents($file), 200, $headers);
+
+        // Caso deseja forçar o download
+        // return response()->download($file, 'report.pdf', $headers);
+    }
+```
+
+### <div id="laravel-injection-pdf" /> PdfExporter Class
+
+```php
+    public function index (\Fireguard\Report\Exporters\PdfExporter $exporter)
+    {
+        $html = view()->make('welcome')->render();
+        $file = $exporter->generate(new Report($html));
+
+        $headers = [
+            'Content-type' => 'application/pdf',
+            'Content-Transfer-Encoding' => 'binary',
+            'Content-Length' => filesize($file),
+            'Accept-Ranges' => 'bytes'
+        ];
+
+        // Caso queira mostrar diretamente o arquivo
+        return response()->make(file_get_contents($file), 200, $headers);
+
+        // Caso deseja forçar o download
+        // return response()->download($file, 'report.pdf', $headers);
+    }
+```
+
+### <div id="laravel-injection-html" /> HtmlExporter Class
+
+```
+    public function index (\Fireguard\Report\Exporters\HtmlExporter $exporter)
+    {
+        $html = view()->make('welcome')->render();
+        $file = $exporter->generate(new Report($html));
+
+        // Caso queira mostrar diretamente o arquivo
+        // return response()->make(file_get_contents($file), 200);
+
+        //Caso queira forçar o download
+        return response()->download($file, 'report.html', []);
+    }
+```
+
+# <div id="examples" /> Outros exemplos de uso
 <br />
 
-- <a href="examples/report1-pdf.php" target="_blank"> Gerando um relatório em PDF</a>
-- <a href="examples/report1-html.php" target="_blank"> Gerando um relatório em HTML</a>
-- <a href="examples/report-boleto.php" target="_blank"> Boleto de exemplo gerado com este package</a>
-
+- <a href="examples/report1-pdf.php" target="_blank" id="use-link-pdf"> Gerando um relatório em PDF</a>
+- <a href="examples/report1-html.php" target="_blank" id="use-link-html"> Gerando um relatório em HTML</a>
+- <a href="examples/report-boleto.php" target="_blank" id="use-link-boleto"> Boleto de exemplo gerado com este package</a>
 <br /><br />

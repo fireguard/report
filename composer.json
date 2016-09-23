@@ -1,6 +1,7 @@
 {
   "name": "fireguard/report",
   "description": "Pacote para gestão de relatórios da Fireguard",
+  "keywords": [ "php", "report", "relatório", "pdf", "html", "laravel"],
   "license": "MIT",
   "authors": [
     {
