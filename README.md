@@ -33,6 +33,7 @@ The **Fireguard Report** is a package PHP form management reports that has inten
 - [Exemplos de Uso](#examples)
     - [Gerando um relatório em PDF](examples/report1-pdf.php)
     - [Gerando um relatório em HTML](examples/report1-html.php)
+    - [Boleto de exemplo gerado com este package](examples/report-boleto.php)
 
 
 # <div id="install" />Instalação
@@ -214,7 +215,8 @@ listado alguns deles:
 # <div id="examples" />Exemplos de Uso
 <br />
 
-- <a href="examples/report1-pdf.php" target="_blank">Gerando um relatório em PDF</a>
-- <a href="examples/report1-html.php" target="_blank">Gerando um relatório em HTML</a>
+- <a href="examples/report1-pdf.php" target="_blank"> Gerando um relatório em PDF</a>
+- <a href="examples/report1-html.php" target="_blank"> Gerando um relatório em HTML</a>
+- <a href="examples/report-boleto.php" target="_blank"> Boleto de exemplo gerado com este package</a>
 
 <br /><br />
