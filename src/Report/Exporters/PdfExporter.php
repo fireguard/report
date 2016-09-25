@@ -70,7 +70,7 @@ class PdfExporter extends Exporter implements ExporterContract
         $this->setConfigDefaultOptions($this->config['phantom']);
 
         $this->commandOptions = $this->configDefaultOptions;
-        $this->setBinaryPath(PhantomBinary::getBin());
+        $this->setBinaryPath((new PhantomBinary)->getBin());
 
         return $this;
     }
@@ -212,28 +212,28 @@ class PdfExporter extends Exporter implements ExporterContract
     }
 
     /**
-     * @param string $option
+     * @param string  $option
+     * @param string $value
      * @return PdfExporter
      */
     public function addCommandOption($option, $value)
     {
         if ( isset($this->configValidOptions[$option])) {
-            $type = $this->configValidOptions[$option];
-            if (is_array($type)) {
-                if (in_array($value, $type)) $this->commandOptions[$option] = $value;
+            $validOptions = $this->configValidOptions[$option];
+            if (is_array($validOptions) && in_array($value, $validOptions)) {
+                $this->commandOptions[$option] = $value;
+                return $this;
             }
-            else {
-                switch ($type) {
-                    case 'string' :
-                        if (!empty($value)) $this->commandOptions[$option] = $value;
-                        break;
-                    case 'bool' :
-                        if (is_bool($value)) $this->commandOptions[$option] = $value;
-                        break;
-                    default:
-                        $this->commandOptions[$option] = $value;
-                        break;
-                }
+            switch ($validOptions) {
+                case 'string' :
+                    if (!empty($value)) $this->commandOptions[$option] = $value;
+                    break;
+                case 'bool' :
+                    if (is_bool($value)) $this->commandOptions[$option] = $value;
+                    break;
+                default:
+                    $this->commandOptions[$option] = $value;
+                    break;
             }
         }
 
@@ -243,12 +243,12 @@ class PdfExporter extends Exporter implements ExporterContract
     /**
      * Prefix the input path for windows versions of PhantomJS
      * @param string $path
-     * @param string $os
+     * @param string $operationalSystem
      * @return string
      */
-    public function prefixOsPath($path, $os = PHP_OS)
+    public function prefixOsPath($path, $operationalSystem = PHP_OS)
     {
-        if (strtoupper(substr($os, 0, 3)) === 'WIN') {
+        if (strtoupper(substr($operationalSystem, 0, 3)) === 'WIN') {
             return 'file:///' . str_replace('\\', '/', $path);
         }
 
@@ -322,22 +322,22 @@ class PdfExporter extends Exporter implements ExporterContract
 
     protected function getHeaderScript()
     {
-        if (empty($this->htmlHeader)) return '';
-        $header = 'height: "'.$this->getHeaderHeight().'",';
-        $header.= 'contents: phantom.callback(function(numPage, totalPages) {';
-        $header.= ' return "'.$this->htmlHeader.'";';
-        $header.= '})';
-        return $header;
+        return $this->getScript($this->htmlHeader, $this->getHeaderHeight());
     }
 
     protected function getFooterScript()
     {
-        if (empty($this->htmlFooter)) return '';
-        $footer = 'height: "'.$this->getFooterHeight().'",';
-        $footer.= 'contents: phantom.callback(function(numPage, totalPages) {';
-        $footer.= ' return "'.$this->htmlFooter.'";"';
-        $footer.= '"})';
-        return $footer;
+        return $this->getScript($this->htmlFooter, $this->getFooterHeight());
+    }
+
+    protected function getScript($html, $heigth)
+    {
+        if (empty($html)) return '';
+        $script = 'height: "'.$heigth.'",';
+        $script.= 'contents: phantom.callback(function(numPage, totalPages) {';
+        $script.= ' return "'.$html.'";"';
+        $script.= '"})';
+        return $script;
     }
 
     protected function getViewPortWidth()

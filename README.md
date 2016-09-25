@@ -8,15 +8,8 @@
 [![Code Climate](https://codeclimate.com/github/fireguard/report/badges/gpa.svg)](https://codeclimate.com/github/fireguard/report)
 
 <!-- **Other languages for this documentation: [PORTUGUÊS](README_PT.md)**-->
-O **Fireguard Report** é um pacote para gestão de relatórios em PHP que tem o intuito de auxiliar a exportação 
-de informações em diversos formatos, como HTML e PDF, usando para isso de uma interface única, integrada e simples, 
-com as tecnologias mais adequadas para cada função.
-
-<!--
-The **Fireguard Report** is a package PHP form management reports that has intention to help export informations
-    in various formats, such HTML and PDF, using a sigle interface an integrated and simple way, using the most 
-    appropriate technologies for each function.
-    -->
+O **Fireguard Report** é um pacote para gestão de relatórios em PHP que tem o intuito de auxiliar na exportação 
+de informações em diversos formatos, como HTML e PDF, usando-se para isso de uma interface única, integrada e simples.
 
 <div id='summary'/>
 # Sumário 
@@ -63,11 +56,11 @@ ou se preferir, adicione o seguinte trecho manualmente:
 
 ## <div id="install-phantom"/>Instalação e Atualização do PhantomJs 
 
-Para gerar os arquivos PDF este pacote utiliza-se do PhantomJs> Para a instalação e atualização do mesmo, sugerimos duas 
-opções:
+Para gerar os arquivos PDF, este pacote utiliza-se do PhantomJs. Para a instalação e atualização do mesmo, sugerimos 
+duas opções:
 
 **1ª Opção:**  Adicionar as linhas abaixo no arquivo composer.json, dessa forma o processo de instalação e atualização 
-acontecerá sempre que executar os comandos "composer install" e "composer update".
+acontecerá sempre que executar os comandos "composer install" ou "composer update".
 
 ```
   "scripts": {
@@ -100,9 +93,9 @@ Caso opte por essa opção, deverá executar ao menos a primeira vez para que o 
 
 ## <div id="first-report"/>Gerando nosso primeiro relatório
 
-A utilização desse pacote é bastante simples, precisaremos de dois objetos para gerarmos um arquivo final, o primeiro é Report, 
-com ele definimos o conteúdo efetivo do relatório, o segundo é o Exporter, que recebe um Report e é responsável por tratar 
-a informação e exportar para um arquivo final. 
+A utilização desse pacote é bastante simples, precisaremos de dois objetos para gerarmos um arquivo final, o primeiro é 
+Report, com ele definimos o conteúdo efetivo do relatório, o segundo é o Exporter, que recebe um Report e é responsável 
+por tratar a informação e exportar para um arquivo final. 
 
 Abaixo um exemplo simples para gerar um arquivo:
 
@@ -116,7 +109,7 @@ Assim ao término da execução, na variável $file teremos o caminho real para 
 
 ## <div id="footer-header" />Cabeçalho e Rodapé
 
-Para o html do cabeçalho e rodapé duas variáveis estão disponíveis em exporters que usam paginação, como é o caso do 
+Para o HTML do cabeçalho e rodapé, duas variáveis estão disponíveis em exporters que usam paginação, como é o caso do 
 PdfExporter, o **numPage** e o **totalPages**, que contém a página atual e o total de páginas do relatório respectivamente. 
 Para acessa-las deve-se envolver as mesmas por "@{{ }}", assim será o conteúdo da mesma será atualizado automaticamente.
 Abaixo um exemplo simples que irá se utilizar do cabeçalho e rodapé;
@@ -145,7 +138,7 @@ Como vimos nos exemplos anteriores, para a exportação do relatório é necess�
 verdade é uma classe especializada, que implementa uma interface Exporter e que é responsável por pegar um Report e o 
 transformar em um arquivo finalizado. 
 
-Nesse momento incluímos neste pacote dois Exporters, um para HTML e um para PDF, é possível que futuramente novos 
+Nesse momento incluímos no pacote dois Exporters, um para HTML e um para PDF, é possível que futuramente novos 
 Exporters estejam disponíveis, inclusive incentivamos que desenvolvam novos exporters, e se possível contribuam com o 
 projeto, assim disponibilizamos para todos um leque maior de possibilidades.
 
@@ -168,7 +161,8 @@ projeto, assim disponibilizamos para todos um leque maior de possibilidades.
 ``generate(ReportContract $report)``: Processa o relatório e retorna um caminho para o arquivo gerado;
 
 Exemplo de uso com interface fluente:
-```
+
+```php
 $report = new \Fireguard\Report\Report('<h1>Report Title</h1>');
 $exporter = new \Fireguard\Report\Exporters\PdfExporter();
 $file = $exporter
@@ -212,8 +206,8 @@ listado alguns deles:
 
 ### <div id="html-exporter" /> HtmlExport
 
-Para a exportação de arquivos no formato de **HTML**, além dos métodos padrões, alguns outros estão disponíveis, abaixo é 
-listado alguns deles:
+Para a exportação de arquivos no formato de **HTML**, além dos métodos padrões, alguns outros estão disponíveis, abaixo 
+é listado alguns deles:
 
 ``saveFile($content)``: Salva o arquivo HTML e retorna o caminho completo para o arquivo gerado;
 
@@ -241,7 +235,7 @@ php artisan vendor:publish --provider="Fireguard\Report\Laravel\ReportServicePro
 ## <div id="laravel-use" /> Exemplos de uso com Laravel (Dependency Injection)
 
 Com o registro do service provider, agora pode-se usar a injeção de dependência do Laravel para resolver os exporters,
-já os trazendo prontos e configurados o arquivo de configuração da aplicação. 
+já os trazendo prontos e configurados com o arquivo de configuração da aplicação. 
 
 Para a injeção de dependência é disponibilidado três classes, sendo uma interface e duas classes concretas, a interface
 por padrão é resolvida para a classe concreta PdfExporter, o que pode ser alterado no parâmetro ``default-exporter`` do 
@@ -295,7 +289,7 @@ arquivo de configuração ```report.php`` gerado na integração. Veja abaixo al
 
 ### <div id="laravel-injection-html" /> HtmlExporter Class
 
-```
+```php
     public function index (\Fireguard\Report\Exporters\HtmlExporter $exporter)
     {
         $html = view()->make('welcome')->render();
@@ -311,8 +305,7 @@ arquivo de configuração ```report.php`` gerado na integração. Veja abaixo al
 
 # <div id="examples" /> Outros exemplos de uso
 <br />
-
 - <a href="examples/report1-pdf.php" target="_blank" id="use-link-pdf"> Gerando um relatório em PDF</a>
 - <a href="examples/report1-html.php" target="_blank" id="use-link-html"> Gerando um relatório em HTML</a>
 - <a href="examples/report-boleto.pdf" target="_blank" id="use-link-boleto"> Boleto de exemplo gerado com este package</a>
-<br /><br />
+<br />
