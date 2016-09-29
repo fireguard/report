@@ -111,7 +111,7 @@ Assim ao término da execução, na variável $file teremos o caminho real para 
 
 Para o HTML do cabeçalho e rodapé, duas variáveis estão disponíveis em exporters que usam paginação, como é o caso do 
 PdfExporter, o **numPage** e o **totalPages**, que contém a página atual e o total de páginas do relatório respectivamente. 
-Para acessa-las deve-se envolver as mesmas por "@{{ }}", assim será o conteúdo da mesma será atualizado automaticamente.
+Para acessa-las deve-se envolver as mesmas por "@{{ }}", assim será o conteúdo da mesma atualizado automaticamente.
 Abaixo um exemplo simples que irá se utilizar do cabeçalho e rodapé;
 
 ```php 
@@ -135,11 +135,11 @@ Com esse exemplo acima encontraremos na variável **$file** o caminho para o arq
 ## <div id="exporters" />Exporters
 
 Como vimos nos exemplos anteriores, para a exportação do relatório é necessário uma classe Exporter. Um Exporter é na 
-verdade é uma classe especializada, que implementa uma interface Exporter e que é responsável por pegar um Report e o 
+verdade uma classe especializada, que implementa uma interface Exporter e que é responsável por pegar um Report e o 
 transformar em um arquivo finalizado. 
 
 Nesse momento incluímos no pacote dois Exporters, um para HTML e um para PDF, é possível que futuramente novos 
-Exporters estejam disponíveis, inclusive incentivamos que desenvolvam novos exporters, e se possível contribuam com o 
+Exporters estejam disponíveis, inclusive incentivamos que desenvolvam novos Exporters, e se possível, contribuam com o 
 projeto, assim disponibilizamos para todos um leque maior de possibilidades.
 
 ### <div id="methods-exports" />Métodos disponíveis em todos os Exports
