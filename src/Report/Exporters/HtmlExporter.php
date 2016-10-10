@@ -4,7 +4,7 @@ namespace Fireguard\Report\Exporters;
 use Fireguard\Report\Contracts\ExporterContract;
 use Fireguard\Report\Contracts\ReportContract;
 
-class HtmlExporter extends Exporter implements ExporterContract
+class HtmlExporter extends AbstractExporter implements ExporterContract
 {
 
     public function configure(array $config = [])
@@ -18,7 +18,9 @@ class HtmlExporter extends Exporter implements ExporterContract
     public function generate(ReportContract $report)
     {
         $html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>'.$this->fileName.'</title></head>';
-        $html.= '<body>'.$this->getProcessedHeader($report).$report->getContent().$this->getProcessedFooter($report).'</body></html>';
+        $html.= '<body style="background-color: #ffffff;">';
+        $html.= $this->getProcessedHeader($report).$report->getContent().$this->getProcessedFooter($report);
+        $html.= '</body></html>';
         return $this->saveFile($html);
     }
 

@@ -3,7 +3,7 @@ namespace Fireguard\Report\Exporters;
 
 use Fireguard\Report\Report;
 
-class PdfExporterTest extends \PHPUnit_Framework_TestCase
+class ImageExporterTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var PdfExporter
@@ -18,37 +18,34 @@ class PdfExporterTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->exporter = new PdfExporter();
+        $this->exporter = new ImageExporter();
         $tmpConfig = $this->exporter->getDefaultConfiguration();
-        $this->configDefault = $tmpConfig['pdf'];
+        $this->configDefault = $tmpConfig['image'];
     }
 
     public function testGetDefaultFormat()
     {
-        $exporter = new PdfExporter();
+        $exporter = new ImageExporter();
         $this->assertEquals($this->configDefault['page']['format'], $exporter->getFormat());
     }
 
     public function testSetValidFormat()
     {
-        $exporter = new PdfExporter();
-        $exporter->setFormat('A3');
-        $this->assertEquals('A3', $exporter->getFormat());
-
+        $exporter = new ImageExporter();
+        $exporter->setFormat('PNG');
+        $this->assertEquals('PNG', $exporter->getFormat());
     }
 
     public function testSetInvalidFormat()
     {
-        $exporter = new PdfExporter();
+        $exporter = new ImageExporter();
         $exporter->setFormat('invalid-format');
         $this->assertEquals($this->configDefault['page']['format'], $exporter->getFormat());
     }
 
-
-
     public function testMountCommandLine()
     {
-        $exporter = new PdfExporter();
+        $exporter = new ImageExporter();
         $options = [
             'debug' => false,
             'ignore-ssl-errors' => true,
@@ -60,9 +57,9 @@ class PdfExporterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $exporter->mountCommandOptions());
     }
 
-    public function testGeneratePdf()
+    public function testGenerateImage()
     {
-        $exporter = new PdfExporter();
+        $exporter = new ImageExporter();
         $report = new Report(
             '<section class="content">Content</section>',
             '<section class="header">Header</section>',
@@ -76,9 +73,9 @@ class PdfExporterTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \RuntimeException
      */
-    public function testGeneratePdfExpectedException()
+    public function testGenerateImageExpectedException()
     {
-        $exporter = new PdfExporter();
+        $exporter = new ImageExporter();
         $report = new Report(
             '<section class="content">Content</section>',
             '<section class="header">Header</section>',
@@ -91,7 +88,7 @@ class PdfExporterTest extends \PHPUnit_Framework_TestCase
 
     public function testGeneratePdfOnlyHeader()
     {
-        $exporter = new PdfExporter();
+        $exporter = new ImageExporter();
         $report = new Report(
             '<section class="content">Content</section>',
             '<section class="header">Header</section>'
@@ -103,7 +100,7 @@ class PdfExporterTest extends \PHPUnit_Framework_TestCase
 
     public function testGeneratePdfOnlyFooter()
     {
-        $exporter = new PdfExporter();
+        $exporter = new ImageExporter();
         $report = new Report(
             '<section class="content">Content</section>',
             '',
@@ -116,7 +113,7 @@ class PdfExporterTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFooterHeight()
     {
-        $exporter = new PdfExporter();
+        $exporter = new ImageExporter();
         $exporter->configure(['footer' => ['height' => '0px']]);
         $this->assertEquals('0px', $exporter->getFooterHeight());
 

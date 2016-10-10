@@ -7,14 +7,14 @@ use PhantomInstaller\PhantomBinary;
 use RuntimeException;
 use Symfony\Component\Process\Process;
 
-class PdfExporter extends AbstractPhantomExporter  implements ExporterContract
+class ImageExporter extends AbstractPhantomExporter  implements ExporterContract
 {
     /**
-     * @var string ['A4', 'A3', 'Letter']
+     * @var string ['BMP', 'JPG', 'JPEG', 'PNG']
      */
-    protected $format = 'A4';
+    protected $format = 'JPG';
 
-    protected $validFormats = ['A4', 'A3', 'Letter'];
+    protected $validFormats = ['BMP', 'JPG', 'JPEG', 'PNG'];
 
     /**
      * @var string ['landscape', 'portrait']
@@ -27,9 +27,9 @@ class PdfExporter extends AbstractPhantomExporter  implements ExporterContract
      */
     public function configure(array $config = [])
     {
-        $this->extension = '.pdf';
+        $this->extension = '.'.strtolower($this->format);
         $defaultConfig = $this->getDefaultConfiguration();
-        $this->config = array_replace_recursive($defaultConfig['pdf'] , $config);
+        $this->config = array_replace_recursive($defaultConfig['image'] , $config);
 
         $this->setConfigDefaultOptions($this->config['phantom']);
 
@@ -40,12 +40,29 @@ class PdfExporter extends AbstractPhantomExporter  implements ExporterContract
     }
 
     /**
+     * @param string $format
+     * @return AbstractPhantomExporter
+     */
+    public function setFormat($format)
+    {
+        parent::setFormat($format);
+        $this->extension = '.'.strtolower($this->getFormat());
+        return $this;
+    }
+
+    /**
      * @param ReportContract $report
      * @return string
      */
     public function generate(ReportContract $report)
     {
-        $this->createHtmlFiles($report);
+        $this->htmlBodyPath = $this->generateHtmlWithAllReportContent($report);
         return $this->saveFinishFile();
+    }
+
+    protected function generateHtmlWithAllReportContent(ReportContract $report)
+    {
+        $exporter = new HtmlExporter($this->getPath(), $this->fileName);
+        return $exporter->generate($report);
     }
 }
