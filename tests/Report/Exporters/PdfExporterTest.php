@@ -44,106 +44,7 @@ class PdfExporterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->configDefault['page']['format'], $exporter->getFormat());
     }
 
-    public function testGetDefaultOrientation()
-    {
-        $exporter = new PdfExporter();
-        $this->assertEquals($this->configDefault['page']['orientation'], $exporter->getOrientation());
-    }
 
-    public function testSetValidOrientation()
-    {
-        $exporter = new PdfExporter();
-        $exporter->setOrientation('landscape');
-        $this->assertEquals('landscape', $exporter->getOrientation());
-
-    }
-
-    public function testSetInvalidOrientation()
-    {
-        $exporter = new PdfExporter();
-        $exporter->setFormat('invalid-orientation');
-        $this->assertEquals($this->configDefault['page']['orientation'], $exporter->getOrientation());
-    }
-
-    public function testGetMargin()
-    {
-        $exporter = new PdfExporter();
-        $this->assertEquals($this->configDefault['page']['margin'], $exporter->getMargin());
-    }
-
-    public function testSetMargin()
-    {
-        $exporter = new PdfExporter();
-        $exporter->setMargin('{top: "0px", right: "0px", bottom: "0px", left: "0px"}');
-        $this->assertEquals('{top: "0px", right: "0px", bottom: "0px", left: "0px"}', $exporter->getMargin());
-
-        $exporter->setMargin('5px');
-        $this->assertEquals('"5px"', $exporter->getMargin());
-
-    }
-
-    public function testSetCommandOptions()
-    {
-        $exporter = new PdfExporter();
-        $options = [
-            'debug' => false,
-            'ignore-ssl-errors' => true,
-            'load-images' => true,
-            'ssl-protocol' => 'any'
-        ];
-        $exporter->setCommandOptions($options);
-        $this->assertEquals($options, $exporter->getCommandOptions());
-    }
-
-    public function testSetBinayPath()
-    {
-        $exporter = new PdfExporter();
-        $exporter->setBinaryPath('/path/for/binary');
-        $this->assertEquals('/path/for/binary', $exporter->getBinaryPath());
-    }
-
-    public function testAddCommandOption()
-    {
-        $exporter = new PdfExporter();
-        $exporter->setConfigValidOptions([
-            'web-security' => 'bool',
-            'disk-cache' => 'bool',
-            'local-storage-path' => 'string',
-            'test-option' => 'not-validated-type',
-            'ssl-protocol' => [ 'sslv3', 'sslv2', 'tlsv1', 'any']
-        ]);
-
-        // Ignore Invalid Option
-        $options = $exporter->getCommandOptions();
-        $exporter->addCommandOption('command-option-include', true);
-        $this->assertEquals($options, $exporter->getCommandOptions());
-
-        // Ignore Invalid Value
-        $exporter->addCommandOption('web-security', 'invalid-expected-bool');
-        $this->assertEquals($options, $exporter->getCommandOptions());
-
-        // Define Valid Value for Bool
-        $exporter->addCommandOption('disk-cache', true);
-        $this->assertArrayHasKey('disk-cache', $exporter->getCommandOptions());
-
-        // Define Valid Value for Array
-        $exporter->addCommandOption('ssl-protocol', 'any');
-        $options = $exporter->getCommandOptions();
-        $this->assertArrayHasKey('ssl-protocol', $options);
-        $this->assertEquals('any', $options['ssl-protocol']);
-
-        // Define Valid Value for String
-        $exporter->addCommandOption('local-storage-path', 'path-string');
-        $options = $exporter->getCommandOptions();
-        $this->assertArrayHasKey('local-storage-path', $options);
-        $this->assertEquals('path-string', $options['local-storage-path']);
-
-        // Define Valid Value for not validated format
-        $exporter->addCommandOption('test-option', 'any-value');
-        $options = $exporter->getCommandOptions();
-        $this->assertArrayHasKey('test-option', $options);
-        $this->assertEquals('any-value', $options['test-option']);
-    }
 
     public function testMountCommandLine()
     {
@@ -158,15 +59,6 @@ class PdfExporterTest extends \PHPUnit_Framework_TestCase
         $expected = '--debug=false --ignore-ssl-errors=true --load-images=true --ssl-protocol=any';
         $this->assertEquals($expected, $exporter->mountCommandOptions());
     }
-
-//    public function testMountScriptForExport()
-//    {
-//        $exporter = new PdfExporter();
-//        $file = $exporter->mountScriptForExport();
-//        $expected = 'var fs = require("fs"),args = require("system").args,page = require("webpage").create(); page.content = fs.read(args[1]);page.viewportSize = {width: 600, height: 600};page.paperSize = {format: "'.$exporter->getFormat().'",orientation: "'.$exporter->getOrientation().'",margin: "1cm",footer: {height: "1cm",contents: phantom.callback(function (pageNum, numPages) {return "<div style=\'text-align: right; font-size: 12px;\'>" + pageNum + " / " + numPages + "</div>";})}}; window.setTimeout(function() {page.render(args[1]);phantom.exit();}, 250);';
-//        $this->assertStringEqualsFile($file, $expected);
-//    }
-
 
     public function testGeneratePdf()
     {
@@ -220,15 +112,6 @@ class PdfExporterTest extends \PHPUnit_Framework_TestCase
         $file = $exporter->generate($report);
         $this->assertFileExists($file);
         $this->assertTrue( filesize($file) > 1000 , 'Generate file is empty');
-    }
-
-    public function testPrefixerFilePath()
-    {
-        $exporter = new PdfExporter();
-
-        $this->assertEquals('/var/www', $exporter->prefixOsPath('/var/www', 'LINUX'));
-
-        $this->assertEquals('file:///c:/www', $exporter->prefixOsPath('c:/www', 'WIN'));
     }
 
     public function testGetFooterHeight()
