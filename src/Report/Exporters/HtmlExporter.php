@@ -4,7 +4,7 @@ namespace Fireguard\Report\Exporters;
 use Fireguard\Report\Contracts\ExporterContract;
 use Fireguard\Report\Contracts\ReportContract;
 
-class HtmlExporter extends Exporter implements ExporterContract
+class HtmlExporter extends AbstractExporter implements ExporterContract
 {
 
     public function configure(array $config = [])

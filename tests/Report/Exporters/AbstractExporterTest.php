@@ -1,17 +1,17 @@
 <?php
 namespace Fireguard\Report\Exporters;
 
-class ExporterTest extends \PHPUnit_Framework_TestCase
+class AbstractExporterTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @var Exporter
+     * @var AbstractExporter
      */
     protected $exporter;
 
     public function setUp()
     {
-        $this->exporter = $this->getMockForAbstractClass(Exporter::class);
+        $this->exporter = $this->getMockForAbstractClass(AbstractExporter::class);
     }
 
     public function testExporterConstructor()
@@ -23,13 +23,13 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
         ), 'Is not writable path generated');
 
         $tmpName = str_replace(sys_get_temp_dir(), '', tempnam(sys_get_temp_dir(), 'test-report'));
-        $exporter = $this->getMockForAbstractClass(Exporter::class, ['', $tmpName]);
+        $exporter = $this->getMockForAbstractClass(AbstractExporter::class, ['', $tmpName]);
         $this->assertEquals($tmpName, $exporter->getFileName());
     }
 
     public function testSetPath()
     {
-        $exporter = $this->getMockForAbstractClass(Exporter::class);
+        $exporter = $this->getMockForAbstractClass(AbstractExporter::class);
         $path = sys_get_temp_dir().DIRECTORY_SEPARATOR.sha1(time()).DIRECTORY_SEPARATOR;
         $exporter->setPath($path);
         $this->assertEquals($path, $exporter->getPath());
@@ -37,7 +37,7 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
 
     public function testSetFileName()
     {
-        $exporter = $this->getMockForAbstractClass(Exporter::class);
+        $exporter = $this->getMockForAbstractClass(AbstractExporter::class);
         $newName = str_replace($exporter->getPath(), '', tempnam($exporter->getPath(), 'test-report'));
         $exporter->setFileName($newName);
         $this->assertEquals($newName, $exporter->getFileName());
@@ -52,7 +52,7 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
 
     public function testSetTimeout()
     {
-        $exporter = $this->getMockForAbstractClass(Exporter::class);
+        $exporter = $this->getMockForAbstractClass(AbstractExporter::class);
         $exporter->setTimeout(100);
         $this->assertEquals(100, $exporter->getTimeout());
     }

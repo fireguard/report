@@ -4,7 +4,7 @@ namespace Fireguard\Report\Exporters;
 use Fireguard\Report\Contracts\ExporterContract;
 use Fireguard\Report\Contracts\ReportContract;
 
-abstract class Exporter implements ExporterContract
+abstract class AbstractExporter implements ExporterContract
 {
     /**
      * @var array

@@ -7,7 +7,7 @@ use PhantomInstaller\PhantomBinary;
 use RuntimeException;
 use Symfony\Component\Process\Process;
 
-class PdfExporter extends Exporter implements ExporterContract
+class PdfExporter extends AbstractPhantomExporter  implements ExporterContract
 {
     /**
      * @var string ['A4', 'A3', 'Letter']
