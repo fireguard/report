@@ -4,8 +4,6 @@ namespace Fireguard\Report\Exporters;
 use Fireguard\Report\Contracts\ExporterContract;
 use Fireguard\Report\Contracts\ReportContract;
 use PhantomInstaller\PhantomBinary;
-use RuntimeException;
-use Symfony\Component\Process\Process;
 
 class PdfExporter extends AbstractPhantomExporter  implements ExporterContract
 {
@@ -47,5 +45,13 @@ class PdfExporter extends AbstractPhantomExporter  implements ExporterContract
     {
         $this->createHtmlFiles($report);
         return $this->saveFinishFile();
+    }
+
+    /**
+     * @return string
+     */
+    function getMimeType()
+    {
+        return 'application/pdf';
     }
 }

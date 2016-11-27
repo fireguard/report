@@ -24,6 +24,14 @@ class HtmlExporter extends AbstractExporter implements ExporterContract
         return $this->saveFile($html);
     }
 
+    /**
+     * @return string
+     */
+    function getMimeType()
+    {
+        return 'text/html';
+    }
+
     public function getProcessedHeader(ReportContract $report)
     {
         return $this->processInlineHtml($report->getHeader());
