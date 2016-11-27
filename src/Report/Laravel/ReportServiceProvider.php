@@ -3,7 +3,6 @@ namespace Fireguard\Report\Laravel;
 
 use Fireguard\Report\Contracts\ExporterContract;
 use Fireguard\Report\Contracts\ReportContract;
-use Fireguard\Report\Exporters\AbstractExporter;
 use Fireguard\Report\Exporters\HtmlExporter;
 use Fireguard\Report\Exporters\ImageExporter;
 use Fireguard\Report\Exporters\PdfExporter;
