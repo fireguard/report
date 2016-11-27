@@ -13,9 +13,19 @@ $footer.= '</div>';
 
 $report = new \Fireguard\Report\Report($html, $header, $footer);
 $exporter = new \Fireguard\Report\Exporters\ImageExporter('', 'report1-to-image');
+
+// Option 1
+// Return with Symfony\Component\HttpFoundation\Response
 $file = $exporter->setOrientation('landscape')
-            ->setFormat('PNG')
-            ->generate($report);
+    ->setFormat('PNG')
+    ->response($report)
+    ->send();
+
+// Option 2
+// Manual Return
+$file = $exporter->setOrientation('landscape')
+    ->setFormat('PNG')
+    ->generate($report);
 
 header('Content-type: image/jpg');
 header('Content-Length: ' . filesize($file));
