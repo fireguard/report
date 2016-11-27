@@ -2,6 +2,7 @@
 namespace Fireguard\Report\Exporters;
 
 use Fireguard\Report\Report;
+use Symfony\Component\HttpFoundation\Response;
 
 class ImageExporterTest extends \PHPUnit_Framework_TestCase
 {
@@ -109,6 +110,34 @@ class ImageExporterTest extends \PHPUnit_Framework_TestCase
         $file = $exporter->generate($report);
         $this->assertFileExists($file);
         $this->assertTrue( filesize($file) > 1000 , 'Generate file is empty');
+    }
+
+    public function testCreateResponseInline()
+    {
+        $exporter = new ImageExporter(null, 'test-file-name-inline');
+        $report = new Report('<section class="content">Content</section>');
+        $response = $exporter->setFormat('JPG')->response($report);
+
+        $this->assertInstanceOf(Response::class, $response);
+
+        $this->assertFalse(
+            $response->headers->contains('content-disposition', 'attachment; filename="test-file-name-inline.jpg"'),
+            'Could not find header to force download'
+        );
+    }
+
+    public function testCreateResponseForceDownload()
+    {
+        $exporter = new ImageExporter(null, 'test-file-name-download');
+        $report = new Report('<section class="content">Content</section>');
+        $response = $exporter->setFormat('JPG')->response($report, true);
+
+        $this->assertInstanceOf(Response::class, $response);
+
+        $this->assertTrue(
+            $response->headers->contains('content-disposition', 'attachment; filename="test-file-name-download.jpg"'),
+            'Could not find header to force download'
+        );
     }
 
     public function testGetFooterHeight()
