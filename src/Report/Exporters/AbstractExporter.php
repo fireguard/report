@@ -3,6 +3,8 @@ namespace Fireguard\Report\Exporters;
 
 use Fireguard\Report\Contracts\ExporterContract;
 use Fireguard\Report\Contracts\ReportContract;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 abstract class AbstractExporter implements ExporterContract
 {
@@ -210,4 +212,31 @@ abstract class AbstractExporter implements ExporterContract
      * @return string
      */
     abstract function generate(ReportContract $report);
+
+
+    /**
+     * @return string
+     */
+    abstract function getMimeType();
+
+
+    /**
+     * @param boolean $forceDownload
+     * @param ReportContract $report
+     * @return Response
+     */
+    function response(ReportContract $report, $forceDownload = false)
+    {
+        $file = $this->generate($report);
+
+        $response = new Response( file_get_contents($file) , Response::HTTP_OK, ['Content-Type' => $this->getMimeType()]);
+        if ($forceDownload) {
+            $disposition =  $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $this->getFileName().$this->extension
+            );
+            $response->headers->set('Content-Disposition', $disposition);
+        }
+        return $response;
+    }
 }

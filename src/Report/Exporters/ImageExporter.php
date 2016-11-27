@@ -4,8 +4,6 @@ namespace Fireguard\Report\Exporters;
 use Fireguard\Report\Contracts\ExporterContract;
 use Fireguard\Report\Contracts\ReportContract;
 use PhantomInstaller\PhantomBinary;
-use RuntimeException;
-use Symfony\Component\Process\Process;
 
 class ImageExporter extends AbstractPhantomExporter  implements ExporterContract
 {
@@ -58,6 +56,14 @@ class ImageExporter extends AbstractPhantomExporter  implements ExporterContract
     {
         $this->htmlBodyPath = $this->generateHtmlWithAllReportContent($report);
         return $this->saveFinishFile();
+    }
+
+    /**
+     * @return string
+     */
+    function getMimeType()
+    {
+        return 'image/'.mb_strtolower($this->format);
     }
 
     protected function generateHtmlWithAllReportContent(ReportContract $report)

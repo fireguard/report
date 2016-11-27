@@ -13,6 +13,14 @@ $footer.= '</div>';
 
 $report = new \Fireguard\Report\Report($html, $header, $footer);
 $exporter = new \Fireguard\Report\Exporters\HtmlExporter();
-$file = $exporter->generate($report);
 
+// Option 1
+// Return with Symfony\Component\HttpFoundation\Response
+$file = $exporter
+    ->response($report)
+    ->send();
+
+// Option 2
+// Manual Return
+$file = $exporter->generate($report);
 echo file_get_contents($file);

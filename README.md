@@ -105,7 +105,7 @@ Abaixo um exemplo simples para gerar um arquivo:
 ```php
     $report     = new \Fireguard\Report\Report('<h1>Report Title</h1>');
     $exporter   = new \Fireguard\Report\Exporters\PdfExporter();
-    $file       = $exporter->generate($report);
+    $file = $exporter->generate($report);    
 ```
 
 Assim ao término da execução, na variável $file teremos o caminho real para o arquivo gerado.
@@ -163,16 +163,28 @@ contribuam com o projeto, assim disponibilizamos para todos um leque maior de po
 
 ``generate(ReportContract $report)``: Processa o relatório e retorna um caminho para o arquivo gerado;
 
+``response(ReportContract $report, $forceDownload)``: Processa o relatório e retorna uma instância do Symfony\Component\HttpFoundation\Response ;
+
 Exemplo de uso com interface fluente:
 
 ```php
 $report = new \Fireguard\Report\Report('<h1>Report Title</h1>');
 $exporter = new \Fireguard\Report\Exporters\PdfExporter();
+// Exemplo retornando uma resposta HTTP
+$exporter
+    ->setPath('.') // Define o salvamento para a pasta local
+    ->setFileName('report.pdf') // Define como 'report.pdf' o nome do arquivo a ser gerado
+    ->configure(['footer' => ['height' => '30px']) // Configura em 30px o tamanho do rodapé
+    ->response($report) // Cria um resposta HTTP
+    ->send(); // Retorna a resposta ao usuário
+    
+// Exemplo gerando um arquivo local
 $file = $exporter
-            ->setPath('.') // Define o salvamento para a pasta local
-            ->setFileName('report.pdf') // Define como 'report.pdf' o nome do arquivo a ser gerado
-            ->configure(['footer' => ['height' => '30px']) // Configura em 30px o tamanho do rodapé
-            ->generate($report); // Gera o relatório
+    ->setPath('.') // Define o salvamento para a pasta local
+    ->setFileName('report.pdf') // Define como 'report.pdf' o nome do arquivo a ser gerado
+    ->configure(['footer' => ['height' => '30px']) // Configura em 30px o tamanho do rodapé
+    ->generate($report); // Gera o relatório
+          
 ```
 
 ### <div id="html-exporter" /> HtmlExport
@@ -281,18 +293,22 @@ arquivo de configuração ```report.php`` gerado na integração. Veja abaixo al
     public function index (\Fireguard\Report\Exporters\ExporterContract $exporter)
     {
         $html = view()->make('welcome')->render();
+        
+        // Option 1
+        return $exporter
+            ->response(new Report($html))
+            ->send();
+        
+        // Option 2
         $file = $exporter->generate(new Report($html));
-
         $headers = [
             'Content-type' => mime_content_type($file),
             'Content-Transfer-Encoding' => 'binary',
             'Content-Length' => filesize($file),
             'Accept-Ranges' => 'bytes'
         ];
-
         // Caso queira mostrar diretamente o arquivo
         return response()->make(file_get_contents($file), 200, $headers);
-
         // Caso deseja forçar o download
         // return response()->download($file, 'report.pdf', $headers);
     }
@@ -304,11 +320,16 @@ arquivo de configuração ```report.php`` gerado na integração. Veja abaixo al
     public function index (\Fireguard\Report\Exporters\HtmlExporter $exporter)
     {
         $html = view()->make('welcome')->render();
+        // Option 1
+        return $exporter
+            ->response(new Report($html))
+            ->send();
+            
+                
+        // Option 2
         $file = $exporter->generate(new Report($html));
-
         // Caso queira mostrar diretamente o arquivo
         // return response()->make(file_get_contents($file), 200);
-
         //Caso queira forçar o download
         return response()->download($file, 'report.html', []);
     }
@@ -320,18 +341,22 @@ arquivo de configuração ```report.php`` gerado na integração. Veja abaixo al
     public function index (\Fireguard\Report\Exporters\PdfExporter $exporter)
     {
         $html = view()->make('welcome')->render();
+        // Option 1
+        return $exporter
+            ->response(new Report($html))
+            ->send();
+                    
+                        
+        // Option 2
         $file = $exporter->generate(new Report($html));
-
         $headers = [
             'Content-type' => 'application/pdf',
             'Content-Transfer-Encoding' => 'binary',
             'Content-Length' => filesize($file),
             'Accept-Ranges' => 'bytes'
         ];
-
         // Caso queira mostrar diretamente o arquivo
         return response()->make(file_get_contents($file), 200, $headers);
-
         // Caso deseja forçar o download
         // return response()->download($file, 'report.pdf', $headers);
     }
@@ -343,16 +368,21 @@ arquivo de configuração ```report.php`` gerado na integração. Veja abaixo al
     public function index (\Fireguard\Report\Exporters\ImageExporter $exporter)
     {
         $html = view()->make('welcome')->render();
-        $file = $exporter->generate(new Report($html));
         
+        // Option 1
+        return $exporter
+            ->response(new Report($html))
+            ->send();
+                            
+                                
+        // Option 2
+        $file = $exporter->generate(new Report($html));
         $headers = [
             'Content-type' => 'image/jpg',
             'Content-Length' => filesize($file),
         ];
-
         // Caso queira mostrar diretamente o arquivo
         return response()->make(file_get_contents($file), 200, $headers);
-
         // Caso deseja forçar o download
         // return response()->download($file, 'report.jpg', $headers);
     }
