@@ -7,46 +7,47 @@
 [![License](https://poser.pugx.org/fireguard/report/license)](https://packagist.org/packages/fireguard/report)
 [![Code Climate](https://codeclimate.com/github/fireguard/report/badges/gpa.svg)](https://codeclimate.com/github/fireguard/report)
 
-<!-- **Other languages for this documentation: [PORTUGUÊS](README_PT.md)**-->
-O **Fireguard Report** é um pacote para gestão de relatórios em PHP que tem o intuito de auxiliar na exportação 
-de informações em diversos formatos, como HTML, PDF e IMAGEM, usando-se para isso de uma interface única, integrada e simples.
+**Other languages for this documentation: [PORTUGUÊS](README_PT.md)**
+
+The **Fireguard Report** is a report management package in PHP that aims to help you export information in a variety of 
+formats, such as HTML, PDF and IMAGE, using a unique, integrated and simple interface.
 
 <div id='summary'/>
-# Sumário 
+# Summary 
 
-- [Instalação](#install)
-    - [Instalação e Atualização do PhantomJs](#install-phantom)
-- [Como utilizar](#use)
-    - [Gerando nosso primeiro relatório](#first-report)
-    - [Cabeçalho e Rodapé](#footer-header)
+- [Installation](#install)
+    - [Installing and Updating PhantomJs](#install-phantom)
+- [How to use](#use)
+    - [Generating our first report](#first-report)
+    - [Header and Footer](#footer-header)
     - [Exporters](#exporters)
-        - [Métodos disponíveis em todos os Exports](#methods-exports)
+        - [Methods available in all Exports](#methods-exports)
         - [HtmlExporter](#html-exporter)
         - [PdfExporter](#pdf-exporter)
         - [ImageExporter](#image-exporter)
         
 - [Laravel](#laravel)
-    - [Registrando Service Provider](#laravel-register-provider)
-    - [Publicando o arquivo de configuração](#laravel-publish-config)
-    - [Exemplos de uso com Laravel (Dependency Injection)](#laravel-use)
-- [Outros exemplos de uso](#examples)
-    - [Gerando um relatório em HTML](#use-link-html)
-    - [Gerando um relatório em PDF](#use-link-pdf)
-    - [Gerando um relatório em Imagem](#use-link-image)
-    - [Boleto de exemplo gerado com este package](#use-link-boleto)
+    - [Registering Service Provider](#laravel-register-provider)
+    - [Publishing the configuration file](#laravel-publish-config)
+    - [Examples of use with Laravel (Dependency Injection)](#laravel-use)
+- [Other usage examples](#examples)
+    - [Generating an HTML report](#use-link-html)
+    - [Generating an PDF report](#use-link-pdf)
+    - [Generating an IMAGE report](#use-link-image)
+    - [Sample ticket generated with this package](#use-link-boleto)
 
 
-# <div id="install" />Instalação
+# <div id="install" />Installation
 
-O Fireguard Report pode ser instalado através do composer. 
+The FireGuard Report can be installed through the composer.
 
-Para que o package seja adicionado automaticamente ao seu arquivo composer.json execute o seguinte comando:
+In order for the package to be automatically added to your composer.json file, run the following command:
 
 ```bash
   composer require fireguard/report
 ```
 
-ou se preferir, adicione o seguinte trecho manualmente:
+Or if you prefer, add the following snippet manually:
 
 ```
 {
@@ -57,13 +58,13 @@ ou se preferir, adicione o seguinte trecho manualmente:
 }
 ```
 
-## <div id="install-phantom"/>Instalação e Atualização do PhantomJs 
+## <div id="install-phantom"/>Installing and Updating PhantomJs
 
-Para gerar os arquivos PDF e Imagens, este pacote utiliza-se do PhantomJs. Para a instalação e atualização do mesmo, sugerimos 
-duas opções:
+To generate the PDF files and Images, this package is used by PhantomJs. For installation and update, we suggest two 
+options:
 
-**1ª Opção:**  Adicionar as linhas abaixo no arquivo composer.json, dessa forma o processo de instalação e atualização 
-acontecerá sempre que executar os comandos "composer install" ou "composer update".
+**1st Option:** Add the lines below in the composer.json file, so the installation and update process will occur every 
+time you execute the "composer install" or "composer update" commands.
 
 ```
   "scripts": {
@@ -76,8 +77,8 @@ acontecerá sempre que executar os comandos "composer install" ou "composer upda
   }
 ```
 
-**2ª Opção:** Caso não deseje manter sempre na última versão PhantomJS, uma possibilidade é acrescentar um novo script 
-no composer.json como demonstrado abaixo:
+**2st Option:** If you do not want to always keep the latest PhantomJS version, one possibility is to add a new script 
+in composer.json as shown below:
 
 ```
   "scripts": {
@@ -87,35 +88,35 @@ no composer.json como demonstrado abaixo:
   }
 ```
 
-E executar sempre que quiser atualizar a versão do executável o seguinte comando ``composer run-script update-phantomjs``
+And run whenever you want to update the version of the executable the following command ``composer run-script update-phantomjs``
 
-Caso opte por essa opção, deverá executar ao menos a primeira vez para que o mesmo seja instalado.
+If you choose this option, you must run at least the first time for it to be installed.
 
 
-# <div id="use"/>Como utilizar
+# <div id="use"/>How to use
 
-## <div id="first-report"/>Gerando nosso primeiro relatório
+## <div id="first-report"/>Generating our first report
 
-A utilização desse pacote é bastante simples, precisaremos de dois objetos para gerarmos um arquivo final, o primeiro é 
-Report, com ele definimos o conteúdo efetivo do relatório, o segundo é o Exporter, que recebe um Report e é responsável 
-por tratar a informação e exportar para um arquivo final. 
+The use of this package is very simple, we will need two objects to generate a final file, the first one is Report, 
+with it we define the effective content of the report, the second is the Exporter, which receives a Report and is 
+responsible for handling the information and export to a final file.
 
-Abaixo um exemplo simples para gerar um arquivo:
+Here is a simple example to generate a file:
 
 ```php
     $report     = new \Fireguard\Report\Report('<h1>Report Title</h1>');
     $exporter   = new \Fireguard\Report\Exporters\PdfExporter();
-    $file = $exporter->generate($report);    
+    $file       = $exporter->generate($report);    
 ```
 
-Assim ao término da execução, na variável $file teremos o caminho real para o arquivo gerado.
+So at the end of the execution, in the variable **$file** we will have the actual path to the generated file.
 
-## <div id="footer-header" />Cabeçalho e Rodapé
+## <div id="footer-header" />Header and Footer
 
-Para o HTML do cabeçalho e rodapé, duas variáveis estão disponíveis em exporters que usam paginação, como é o caso do 
-PdfExporter, o **numPage** e o **totalPages**, que contém a página atual e o total de páginas do relatório respectivamente. 
-Para acessa-las deve-se envolver as mesmas por "@{{ }}", assim será o conteúdo da mesma atualizado automaticamente.
-Abaixo um exemplo simples que irá se utilizar do cabeçalho e rodapé;
+For header and footer HTML, two variables are available in exporters that use paging, such as PdfExporter, **numPage**, 
+and **totalPages**, which contains the current page and the total pages of the page respectively. 
+To access them, you must enclose them by "@{{  }}", so the contents of the content will be automatically updated.
+Below is a simple example that will use the header and footer;
 
 ```php 
   $html   = file_get_contents('report.html');
@@ -133,159 +134,160 @@ Abaixo um exemplo simples que irá se utilizar do cabeçalho e rodapé;
   $file   = $exporter->generate($report);
   
 ```
-Com esse exemplo acima encontraremos na variável **$file** o caminho para o arquivo PDF gerado;
+With this example above we will find in the variable **$file** the path to the generated PDF file;
 
 ## <div id="exporters" />Exporters
 
-Como vimos nos exemplos anteriores, para a exportação do relatório é necessário uma classe Exporter. Um Exporter é na 
-verdade uma classe especializada, que implementa uma interface ExporterContract e que é responsável por pegar um objeto 
-Report e o transformar em um arquivo finalizado. 
+As we saw in the previous examples, the export of the report requires an Exporter class. An Exporter is a specialized 
+class that implements an ExporterContract interface and is responsible for catching a Report object and transforming it 
+into a finalized file. 
 
-Nesse momento incluímos no pacote três Exporters, um para HTML, um para PDF e um para Imagens, é possível que 
-futuramente novos Exporters estejam disponíveis, inclusive incentivamos que desenvolvam novos Exporters, e se possível, 
-contribuam com o projeto, assim disponibilizamos para todos um leque maior de possibilidades.
+At this point we have included in the package three Exporters, one for HTML, one for PDF and one for Images, it is 
+possible that in future new Exporters will be available, we also encourage you to develop new Exporters and, if 
+possible, contribute to the project.
 
-### <div id="methods-exports" />Métodos disponíveis em todos os Exports
+### <div id="methods-exports" />Methods available in all Exports
 
-``getPath()``: Retorna o local onde o arquivo gerado será salvo;
+``getPath()``: Returns the location where the generated file will be saved;
 
-``setPath($path, $mode = 0777)``: Define o local onde o arquivo deve ser salvo;
+``setPath($path, $mode = 0777)``: Sets the location where the file should be saved;
 
-``getFileName()``: Retorna o nome do arquivo a ser salvo;
+``getFileName()``: Returns the name of the file to save;
 
-``setFileName($fileName)``: Define o nome do arquivo a ser salvo;
+``setFileName($fileName)``: Sets the name of the file to be saved;
 
-``getFullPath()``: Retorna o caminho completo com o nome do arquivo a ser gerado;
+``getFullPath()``: Returns the complete path with the name of the file to be generated;
 
-``compress($buffer)``: Retorna um string comprimida sem comentários ou quebra de linhas;
+``compress($buffer)``: Returns a compressed string with no comments or line breaks;
 
-``configure(array $config)``: Define as configurações a serem aplicadas ao relatório atual;
+``configure(array $config)``: Sets the settings to apply to the current report;
 
-``generate(ReportContract $report)``: Processa o relatório e retorna um caminho para o arquivo gerado;
+``generate(ReportContract $report)``: Renders the report and returns a path to the generated file;
 
-``response(ReportContract $report, $forceDownload)``: Processa o relatório e retorna uma instância do Symfony\Component\HttpFoundation\Response ;
+``response(ReportContract $report, $forceDownload)``: Renders the report and returns an instance of the Symfony\Component\HttpFoundation\Response;
 
-Exemplo de uso com interface fluente:
+Example of use with a fluent interface:
 
 ```php
 $report = new \Fireguard\Report\Report('<h1>Report Title</h1>');
 $exporter = new \Fireguard\Report\Exporters\PdfExporter();
-// Exemplo retornando uma resposta HTTP
-$exporter
-    ->setPath('.') // Define o salvamento para a pasta local
-    ->setFileName('report.pdf') // Define como 'report.pdf' o nome do arquivo a ser gerado
-    ->configure(['footer' => ['height' => '30px']) // Configura em 30px o tamanho do rodapé
-    ->response($report) // Cria um resposta HTTP
-    ->send(); // Retorna a resposta ao usuário
+// Example returning an HTTP response
+$exporterGenerates report
+    ->setPath('.') // Sets the save to the local folder
+    ->setFileName('report.pdf') // Define as 'report.pdf' the name of the file to be generated
+    ->configure(['footer' => ['height' => '30px']) // Set the footer size to 30px
+    ->response($report) // Create an HTTP response
+    ->send(); // Returns the response to the user
     
-// Exemplo gerando um arquivo local
+// Example generating a local file
 $file = $exporter
-    ->setPath('.') // Define o salvamento para a pasta local
-    ->setFileName('report.pdf') // Define como 'report.pdf' o nome do arquivo a ser gerado
-    ->configure(['footer' => ['height' => '30px']) // Configura em 30px o tamanho do rodapé
-    ->generate($report); // Gera o relatório
+    ->setPath('.') // Sets the save to the local folder
+    ->setFileName('report.pdf') // Define as 'report.pdf' the name of the file to be generated
+    ->configure(['footer' => ['height' => '30px']) // Set the footer size to 30px
+    ->generate($report); // Generates report
           
 ```
 
 ### <div id="html-exporter" /> HtmlExport
 
-Para a exportação de arquivos no formato de **HTML**, além dos métodos padrões, alguns outros estão disponíveis, abaixo 
-todos são listados com uma breve descrição de sua função:
+For exporting files in **HTML** format, in addition to the standard methods, some others are available, below all are 
+listed with a brief description of their function:
 
-``saveFile($content)``: Salva o arquivo HTML e retorna o caminho completo para o arquivo gerado;
+``saveFile($content)``: Saves the HTML file and returns the full path to the generated file;
 
 ### <div id="pdf-exporter" />PdfExport
 
-Para a exportação de arquivos no formato de **PDF**, além dos métodos padrões, alguns outros estão disponíveis, abaixo 
-todos são listados com uma breve descrição de sua função:
+For exporting files in **PDF** format, in addition to the standard methods, some others are available, below all are 
+listed with a brief description of their function:
 
-``getFormat()``: Retorna o formato do papel definido;
+``getFormat()``: Returns the defined paper size;
 
-``setFormat($format)``: Define um formato de papel a ser exportado. (Formatos válidos: 'A4', 'A3', 'Letter')
+``setFormat($format)``: Sets a paper size to be exported. (Valid Formats: 'A4', 'A3', 'Letter')
 
-``getOrientation()``: Retorna a orientação do papel definida;
+``getOrientation()``: Returns the orientation of the defined paper;
 
-``setOrientation($orientation)``: Define a orientação do papel a ser exportado. (Orientações válidas: 'landscape', 'portrait')
+``setOrientation($orientation)``: Sets the orientation of the paper to be exported. (Valid Orientations: 'landscape', 'portrait')
 
-``getMargin()``: Retorna a margem do papel definida;
+``getMargin()``: Returns the defined paper margin;
 
-``setMargin($margin)``: Define a margem do papel a ser exportado.
+``setMargin($margin)``: Sets the paper margin to be exported;
 
-``getBinaryPath()``: Retorna o caminho para o binário do PhantomJS na aplicação;
+``getBinaryPath()``: Returns the path to the PhantomJS binary in the application;
 
-``setBinaryPath($binaryPath)``: Define o caminho para o arquivo binário do PhantomJS na aplicação.
+``setBinaryPath($binaryPath)``: Sets the path to the PhantomJS binary file in the application;
 
-``getCommandOptions()``: Retorna os parâmetros a serem executados com o PhantomJS para a exportação;
+``getCommandOptions()``: Returns the parameters to be executed with the PhantomJS for export;
 
-``setCommandOptions(array $options)``: Define os parâmetros a serem executados com o PhantomJS para a exportação.
+``setCommandOptions(array $options)``: Sets the parameters to be executed with the PhantomJS for export;
 
-``addCommandOption($option, $value)``: Adiciona um novo parâmetro a ser executado com o PhantomJS para a exportação;
+``addCommandOption($option, $value)``: Adds a new parameter to run with PhantomJS for export;
 
-``getHeaderHeight()``: Retorna o tamanho do cabeçalho definido;
+``getHeaderHeight()``: Returns the size of the header defined;
 
-``getFooterHeight()``: Retorna o tamanho do rodapé definido;
+``getFooterHeight()``: Returns the size of the footer defined;
 
 ### <div id="image-exporter" />ImageExport
 
-Para a exportação de arquivos em formatos de **Imagem**, além dos métodos padrões, alguns outros estão disponíveis, 
-abaixo são listados com uma breve descrição de sua função:
+For exporting files in **IMAGE** format, in addition to the standard methods, some others are available, below all are 
+listed with a brief description of their function:
 
-``getFormat()``: Retorna o formato da imagem a ser exportada;
+``getFormat()``: Returns the defined paper size;
 
-``setFormat($format)``: Define o formato da imagem a ser exportada. (Formatos válidos: 'BMP', 'JPG', 'JPEG', 'PNG')
+``setFormat($format)``: Sets a paper size to be exported. (Valid Formats: 'A4', 'A3', 'Letter')
 
-``getOrientation()``: Retorna a orientação da imagem baseada nas configurações do viewport;
+``getOrientation()``: Returns the orientation of the defined paper;
 
-``setOrientation($orientation)``: Define a orientação da imagem a ser exportada. (Orientações válidas: 'landscape', 'portrait')
+``setOrientation($orientation)``: Sets the orientation of the paper to be exported. (Valid Orientations: 'landscape', 'portrait')
 
-``getMargin()``: Retorna a margem da imagem a ser exportada;
+``getMargin()``: Returns the defined paper margin;
 
-``setMargin($margin)``: Define a margem da imagem a ser exportada.
+``setMargin($margin)``: Sets the paper margin to be exported;
 
-``getBinaryPath()``: Retorna o caminho para o binário do PhantomJS na aplicação;
+``getBinaryPath()``: Returns the path to the PhantomJS binary in the application;
 
-``setBinaryPath($binaryPath)``: Define o caminho para o arquivo binário do PhantomJS na aplicação.
+``setBinaryPath($binaryPath)``: Sets the path to the PhantomJS binary file in the application;
 
-``getCommandOptions()``: Retorna os parâmetros a serem executados com o PhantomJS para a exportação;
+``getCommandOptions()``: Returns the parameters to be executed with the PhantomJS for export;
 
-``setCommandOptions(array $options)``: Define os parâmetros a serem executados com o PhantomJS para a exportação.
+``setCommandOptions(array $options)``: Sets the parameters to be executed with the PhantomJS for export;
 
-``addCommandOption($option, $value)``: Adiciona um novo parâmetro a ser executado com o PhantomJS para a exportação;
+``addCommandOption($option, $value)``: Adds a new parameter to run with PhantomJS for export;
 
-``getHeaderHeight()``: Retorna o tamanho do cabeçalho definido;
+``getHeaderHeight()``: Returns the size of the header defined;
 
-``getFooterHeight()``: Retorna o tamanho do rodapé definido;
+``getFooterHeight()``: Returns the size of the footer defined;
 
 
 # <div id="laravel" /> Laravel
 
-Os passos descritos abaixo são opcionais e apenas podem facilitar para quem pretente usar este package com o Laravel 5.
+The steps described below are optional and can only make it easier for those who want to use this package with Laravel 5.
 
-## <div id="laravel-register-provider" /> Registrando Service Provider
+## <div id="laravel-register-provider" /> Registering Service Provider
 
-No arquivo de configuração ``config\app.php``, registre acima dos providers de sua aplicação como segue abaixo:
+In the ``config\app.php`` configuration file, register above the providers of your application as follows:
 
 ```
 'providers' => [
-    Fireguard\Report\Laravel\ReportServiceProvider::class
+    Fireguard\Report\Laravel\ReportServiceProvider::class,
+    ...
 ]
 ```
 
-## <div id="laravel-publish-config" /> Publicando o arquivo de configuração
+## <div id="laravel-publish-config" /> Publishing the configuration file
 
-Para publicar o arquivo de configuração deve-se usar o seguinte comando:
+To publish the configuration file you must use the following command:
 ```
 php artisan vendor:publish --provider="Fireguard\Report\Laravel\ReportServiceProvider"
 ```
 
-## <div id="laravel-use" /> Exemplos de uso com Laravel (Dependency Injection)
+## <div id="laravel-use" /> Examples of use with Laravel (Dependency Injection)
 
-Com o registro do service provider, agora pode-se usar a injeção de dependência do Laravel para resolver os exporters,
-já os trazendo prontos e configurados com o arquivo de configuração da aplicação. 
+With the registration of the service provider, you can now use the dependency injection of Laravel to solve the 
+exporters, already bringing them ready and configured with the application configuration file.
 
-Para a injeção de dependência é disponibilidado quatro classes, sendo uma interface e três concretas, a interface
-por padrão é resolvida para a classe concreta PdfExporter, o que pode ser alterado no parâmetro ``default-exporter`` do 
-arquivo de configuração ```report.php`` gerado na integração. Veja abaixo alguns exemplos de uso.
+For dependency injection four classes are available, one interface and three concrete, the default interface is solved 
+for the concrete PdfExporter class, which can be changed in the ``default-exporter`` parameter of the configuration 
+file ``report.php`` generated in the integration. See below some examples of use.
 
 ### <div id="laravel-injection-interface" /> Exporter Interface
 
@@ -307,9 +309,9 @@ arquivo de configuração ```report.php`` gerado na integração. Veja abaixo al
             'Content-Length' => filesize($file),
             'Accept-Ranges' => 'bytes'
         ];
-        // Caso queira mostrar diretamente o arquivo
+        // If you want to directly display the file
         return response()->make(file_get_contents($file), 200, $headers);
-        // Caso deseja forçar o download
+        // If you want to force download
         // return response()->download($file, 'report.pdf', $headers);
     }
 ```
@@ -328,9 +330,9 @@ arquivo de configuração ```report.php`` gerado na integração. Veja abaixo al
                 
         // Option 2
         $file = $exporter->generate(new Report($html));
-        // Caso queira mostrar diretamente o arquivo
+        // If you want to directly display the file
         // return response()->make(file_get_contents($file), 200);
-        //Caso queira forçar o download
+        // If you want to force download
         return response()->download($file, 'report.html', []);
     }
 ```
@@ -355,9 +357,9 @@ arquivo de configuração ```report.php`` gerado na integração. Veja abaixo al
             'Content-Length' => filesize($file),
             'Accept-Ranges' => 'bytes'
         ];
-        // Caso queira mostrar diretamente o arquivo
+        // If you want to directly display the file
         return response()->make(file_get_contents($file), 200, $headers);
-        // Caso deseja forçar o download
+        // If you want to force download
         // return response()->download($file, 'report.pdf', $headers);
     }
 ```
@@ -381,17 +383,17 @@ arquivo de configuração ```report.php`` gerado na integração. Veja abaixo al
             'Content-type' => 'image/jpg',
             'Content-Length' => filesize($file),
         ];
-        // Caso queira mostrar diretamente o arquivo
+        // If you want to directly display the file
         return response()->make(file_get_contents($file), 200, $headers);
-        // Caso deseja forçar o download
+        // If you want to force download
         // return response()->download($file, 'report.jpg', $headers);
     }
 ```
 
-# <div id="examples" /> Outros exemplos de uso
+# <div id="examples" /> Other usage examples
 <br />
-- <a href="examples/report1-html.php" target="_blank" id="use-link-html"> Gerando um relatório em HTML</a>
-- <a href="examples/report1-pdf.php" target="_blank" id="use-link-pdf"> Gerando um relatório em PDF</a>
-- <a href="examples/report1-image.php" target="_blank" id="use-link-image"> Gerando um relatório em Imagem</a>
-- <a href="examples/report-boleto.pdf" target="_blank" id="use-link-boleto"> Boleto de exemplo gerado com este package</a>
+- <a href="examples/report1-html.php" target="_blank" id="use-link-html"> Generating an HTML report</a>
+- <a href="examples/report1-pdf.php" target="_blank" id="use-link-pdf"> Generating an PDF report</a>
+- <a href="examples/report1-image.php" target="_blank" id="use-link-image"> Generating an IMAGE report</a>
+- <a href="examples/report-boleto.pdf" target="_blank" id="use-link-boleto"> Sample ticket generated with this package</a>
 <br />

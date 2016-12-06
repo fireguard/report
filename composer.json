@@ -1,6 +1,6 @@
 {
   "name": "fireguard/report",
-  "description": "Pacote para gestão de relatórios em PDF, HTML e Imagem",
+  "description": "Report management package in PHP that aims to help you export information in a variety of formats",
   "keywords": [ "php", "report", "relatório", "pdf", "html", "image", "laravel"],
   "license": "MIT",
   "authors": [
