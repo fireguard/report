@@ -84,6 +84,20 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $report->getFooter());
     }
 
+    public function testReportAppendImagesToHeaderAndFooterInContent()
+    {
+        $report = new Report('<div>test for html values</div>');
+        $report->setHeader('<div><img src="img-src-path.png" title="Description"></div>');
+
+        $expected = '<img src="img-src-path.png" style="display: none;" /><div>test for html values</div>';
+        $this->assertEquals($expected, $report->getContent());
+
+        $report = new Report('<div>test for html values</div>');
+        $report->setFooter('<div><img src="img-src-path.png" title="Description"></div>');
+
+        $expected = '<img src="img-src-path.png" style="display: none;" /><div>test for html values</div>';
+        $this->assertEquals($expected, $report->getContent());
+    }
 
     public function testReportConfigInConstructor()
     {
