@@ -45,7 +45,8 @@ class Report implements ReportContract
      */
     public function getContent()
     {
-        return $this->content;
+        $resources = $this->getResourcesStringInHeaderAndFooter();
+        return $resources.$this->content;
     }
 
     /**
@@ -110,5 +111,34 @@ class Report implements ReportContract
     {
         $this->config = $config;
         return $this;
+    }
+
+    protected function getResourcesStringInHeaderAndFooter()
+    {
+        $images = $this->getAllImagesInHeaderAndFooter();
+        $resources = '';
+        foreach ($images as $image) {
+            $resources .= '<img src="'.$image.'" style="display: none;" />';
+        }
+        return $resources;
+    }
+
+    protected function getAllImagesInHeaderAndFooter()
+    {
+        $doc = new \DOMDocument();
+        $html = $this->getHeader().$this->getFooter();
+        if (!empty($html)) {
+            libxml_use_internal_errors(true);
+            $doc->loadHTML($html);
+            libxml_clear_errors();
+            $imageTags = $doc->getElementsByTagName('img');
+
+            $result = [];
+            foreach($imageTags as $tag) {
+                $result[] = $tag->getAttribute('src');
+            }
+            return array_unique($result);
+        }
+        return [];
     }
 }
