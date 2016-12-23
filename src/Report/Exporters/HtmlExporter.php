@@ -52,6 +52,7 @@ class HtmlExporter extends AbstractExporter implements ExporterContract
     {
         $clearHtml = str_replace('"', '\'', $html);
         $clearHtml = str_replace("@{{", '', $clearHtml);
+        $clearHtml = str_replace("{{", '', $clearHtml);
         $clearHtml = str_replace('numPage', ' 1 ', $clearHtml);
         $clearHtml = str_replace('totalPages', ' 1 ', $clearHtml);
         return $this->compress(str_replace("}}", '', $clearHtml));

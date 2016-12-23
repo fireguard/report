@@ -59,4 +59,11 @@ interface ExporterContract
      */
     public function generate(ReportContract $report);
 
+    /**
+     * @param boolean $forceDownload
+     * @param ReportContract $report
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    function response(ReportContract $report, $forceDownload = false);
+
 }
