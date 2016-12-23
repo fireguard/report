@@ -263,6 +263,7 @@ abstract class AbstractPhantomExporter extends AbstractExporter
     {
         $clearHtml = str_replace('"', '\'', $html);
         $clearHtml = str_replace("@{{", '" + ', $clearHtml);
+        $clearHtml = str_replace("{{", '" + ', $clearHtml);
         return $this->compress(str_replace("}}", ' + "', $clearHtml));
     }
 
