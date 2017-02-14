@@ -1,15 +1,15 @@
 <?php
 namespace Fireguard\Report\Contracts;
 
-interface ReportContract
+interface ReportInterface
 {
     /**
-     * ReportContract constructor.
+     * ReportInterface constructor.
      * @param string $content
      * @param string $header
      * @param string $footer
      * @param array $config
-     * @return ReportContract
+     * @return ReportInterface
      */
     public function __construct($content, $header = "", $footer = "", array $config = []);
 
@@ -20,7 +20,7 @@ interface ReportContract
 
     /**
      * @param string $content
-     * @return ReportContract
+     * @return ReportInterface
      */
     public function setContent($content);
 
@@ -31,7 +31,7 @@ interface ReportContract
 
     /**
      * @param string $header
-     * @return ReportContract
+     * @return ReportInterface
      */
     public function setHeader($header);
 
@@ -42,7 +42,7 @@ interface ReportContract
 
     /**
      * @param string $footer
-     * @return ReportContract
+     * @return ReportInterface
      */
     public function setFooter($footer);
 
@@ -53,7 +53,7 @@ interface ReportContract
 
     /**
      * @param string $config
-     * @return ReportContract
+     * @return ReportInterface
      */
     public function setConfig($config);
 }

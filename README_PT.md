@@ -139,7 +139,7 @@ Com esse exemplo acima encontraremos na variável **$file** o caminho para o arq
 ## <div id="exporters" />Exporters
 
 Como vimos nos exemplos anteriores, para a exportação do relatório é necessário uma classe Exporter. Um Exporter é na 
-verdade uma classe especializada, que implementa uma interface ExporterContract e que é responsável por pegar um objeto 
+verdade uma classe especializada, que implementa uma interface ExporterInterface e que é responsável por pegar um objeto 
 Report e o transformar em um arquivo finalizado. 
 
 Nesse momento incluímos no pacote três Exporters, um para HTML, um para PDF e um para Imagens, é possível que 
@@ -162,9 +162,9 @@ contribuam com o projeto, assim disponibilizamos para todos um leque maior de po
 
 ``configure(array $config)``: Define as configurações a serem aplicadas ao relatório atual;
 
-``generate(ReportContract $report)``: Processa o relatório e retorna um caminho para o arquivo gerado;
+``generate(ReportInterface $report)``: Processa o relatório e retorna um caminho para o arquivo gerado;
 
-``response(ReportContract $report, $forceDownload)``: Processa o relatório e retorna uma instância do Symfony\Component\HttpFoundation\Response ;
+``response(ReportInterface $report, $forceDownload)``: Processa o relatório e retorna uma instância do Symfony\Component\HttpFoundation\Response ;
 
 Exemplo de uso com interface fluente:
 
@@ -292,7 +292,7 @@ arquivo de configuração ``report.php`` gerado na integração. Veja abaixo alg
 ### <div id="laravel-injection-interface" /> Exporter Interface
 
 ```php
-    public function index (\Fireguard\Report\Exporters\ExporterContract $exporter)
+    public function index (\Fireguard\Report\Exporters\ExporterInterface $exporter)
     {
         $html = view()->make('welcome')->render();
         

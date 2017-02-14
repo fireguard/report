@@ -1,11 +1,11 @@
 <?php
 namespace Fireguard\Report\Exporters;
 
-use Fireguard\Report\Contracts\ExporterContract;
-use Fireguard\Report\Contracts\ReportContract;
+use Fireguard\Report\Contracts\ExporterInterface;
+use Fireguard\Report\Contracts\ReportInterface;
 use PhantomInstaller\PhantomBinary;
 
-class ImageExporter extends AbstractPhantomExporter  implements ExporterContract
+class ImageExporter extends AbstractPhantomExporter  implements ExporterInterface
 {
     /**
      * @var string ['BMP', 'JPG', 'JPEG', 'PNG']
@@ -21,7 +21,7 @@ class ImageExporter extends AbstractPhantomExporter  implements ExporterContract
 
     /**
      * @param array $config
-     * @return ExporterContract
+     * @return ExporterInterface
      */
     public function configure(array $config = [])
     {
@@ -49,10 +49,10 @@ class ImageExporter extends AbstractPhantomExporter  implements ExporterContract
     }
 
     /**
-     * @param ReportContract $report
+     * @param ReportInterface $report
      * @return string
      */
-    public function generate(ReportContract $report)
+    public function generate(ReportInterface $report)
     {
         $this->htmlBodyPath = $this->generateHtmlWithAllReportContent($report);
         return $this->saveFinishFile();
@@ -61,12 +61,12 @@ class ImageExporter extends AbstractPhantomExporter  implements ExporterContract
     /**
      * @return string
      */
-    function getMimeType()
+    public function getMimeType()
     {
         return 'image/'.mb_strtolower($this->format);
     }
 
-    protected function generateHtmlWithAllReportContent(ReportContract $report)
+    protected function generateHtmlWithAllReportContent(ReportInterface $report)
     {
         $exporter = new HtmlExporter($this->getPath(), $this->fileName);
         return $exporter->generate($report);

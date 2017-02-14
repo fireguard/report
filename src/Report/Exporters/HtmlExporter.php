@@ -1,10 +1,10 @@
 <?php
 namespace Fireguard\Report\Exporters;
 
-use Fireguard\Report\Contracts\ExporterContract;
-use Fireguard\Report\Contracts\ReportContract;
+use Fireguard\Report\Contracts\ExporterInterface;
+use Fireguard\Report\Contracts\ReportInterface;
 
-class HtmlExporter extends AbstractExporter implements ExporterContract
+class HtmlExporter extends AbstractExporter implements ExporterInterface
 {
 
     public function configure(array $config = [])
@@ -15,7 +15,7 @@ class HtmlExporter extends AbstractExporter implements ExporterContract
         return $this;
     }
 
-    public function generate(ReportContract $report)
+    public function generate(ReportInterface $report)
     {
         $html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>'.$this->fileName.'</title></head>';
         $html.= '<body style="background-color: #ffffff;">';
@@ -27,17 +27,17 @@ class HtmlExporter extends AbstractExporter implements ExporterContract
     /**
      * @return string
      */
-    function getMimeType()
+    public function getMimeType()
     {
         return 'text/html';
     }
 
-    public function getProcessedHeader(ReportContract $report)
+    public function getProcessedHeader(ReportInterface $report)
     {
         return $this->processInlineHtml($report->getHeader());
     }
 
-    public function getProcessedFooter(ReportContract $report)
+    public function getProcessedFooter(ReportInterface $report)
     {
         return $this->processInlineHtml($report->getFooter());
     }
@@ -57,5 +57,4 @@ class HtmlExporter extends AbstractExporter implements ExporterContract
         $clearHtml = str_replace('totalPages', ' 1 ', $clearHtml);
         return $this->compress(str_replace("}}", '', $clearHtml));
     }
-
 }
