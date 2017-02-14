@@ -7,6 +7,8 @@
 [![License](https://poser.pugx.org/fireguard/report/license)](https://packagist.org/packages/fireguard/report)
 [![Code Climate](https://codeclimate.com/github/fireguard/report/badges/gpa.svg)](https://codeclimate.com/github/fireguard/report)
 
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/f378db1b-5a6a-4b13-b49d-ff28a9c29a62/big.png)](https://insight.sensiolabs.com/projects/f378db1b-5a6a-4b13-b49d-ff28a9c29a62)
+
 **Other languages for this documentation: [PORTUGUÊS](README_PT.md)**
 
 The **Fireguard Report** is a report management package in PHP that aims to help you export information in a variety of 
