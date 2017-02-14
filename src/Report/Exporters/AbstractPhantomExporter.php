@@ -1,7 +1,7 @@
 <?php
 namespace Fireguard\Report\Exporters;
 
-use Fireguard\Report\Contracts\ReportContract;
+use Fireguard\Report\Contracts\ReportInterface;
 use Symfony\Component\Process\Exception\RuntimeException;
 use Symfony\Component\Process\Process;
 
@@ -57,7 +57,7 @@ abstract class AbstractPhantomExporter extends AbstractExporter
         'webdriver-selenium-grid-hub' => 'string'
     ];
 
-    protected function createHtmlFiles(ReportContract $report)
+    protected function createHtmlFiles(ReportInterface $report)
     {
         $exporter = new HtmlExporter($this->getPath(), $this->fileName);
         $this->htmlBodyPath = $exporter->saveFile($report->getContent());

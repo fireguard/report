@@ -1,14 +1,14 @@
 <?php
 namespace Fireguard\Report\Contracts;
 
-interface ExporterContract
+interface ExporterInterface
 {
     /**
-     * ExporterContract constructor.
+     * ExporterInterface constructor.
      * @param string $path
      * @param string $fileName
      * @param array $config
-     * @return ExporterContract
+     * @return ExporterInterface
      */
     public function __construct($path = '', $fileName = '', $config = []);
 
@@ -20,7 +20,7 @@ interface ExporterContract
     /**
      * @param string $path
      * @param unix_permission $mode Permission
-     * @return ExporterContract
+     * @return ExporterInterface
      */
     public function setPath($path, $mode = 0777);
 
@@ -31,7 +31,7 @@ interface ExporterContract
 
     /**
      * @param $fileName
-     * @return ExporterContract
+     * @return ExporterInterface
      */
     public function setFileName($fileName);
 
@@ -42,7 +42,7 @@ interface ExporterContract
 
     /**
      * @param array $config
-     * @return ExporterContract
+     * @return ExporterInterface
      */
     public function configure(array $config);
 
@@ -54,16 +54,15 @@ interface ExporterContract
     public function compress($buffer);
 
     /**
-     * @param ReportContract $report
+     * @param ReportInterface $report
      * @return string | false
      */
-    public function generate(ReportContract $report);
+    public function generate(ReportInterface $report);
 
     /**
      * @param boolean $forceDownload
-     * @param ReportContract $report
+     * @param ReportInterface $report
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    function response(ReportContract $report, $forceDownload = false);
-
+    public function response(ReportInterface $report, $forceDownload = false);
 }

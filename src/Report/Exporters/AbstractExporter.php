@@ -1,12 +1,12 @@
 <?php
 namespace Fireguard\Report\Exporters;
 
-use Fireguard\Report\Contracts\ExporterContract;
-use Fireguard\Report\Contracts\ReportContract;
+use Fireguard\Report\Contracts\ExporterInterface;
+use Fireguard\Report\Contracts\ReportInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-abstract class AbstractExporter implements ExporterContract
+abstract class AbstractExporter implements ExporterInterface
 {
     /**
      * @var array
@@ -52,7 +52,7 @@ abstract class AbstractExporter implements ExporterContract
     protected $configDefaultOptions = [];
 
     /**
-     * ExporterContract constructor.
+     * ExporterInterface constructor.
      * @param string $path
      * @param string $fileName
      * @param array $config
@@ -75,7 +75,7 @@ abstract class AbstractExporter implements ExporterContract
     /**
      * @param string $path
      * @param unix_permission $mode Permission
-     * @return ExporterContract
+     * @return ExporterInterface
      */
     public function setPath($path, $mode = 0777)
     {
@@ -102,7 +102,7 @@ abstract class AbstractExporter implements ExporterContract
 
     /**
      * @param $fileName
-     * @return ExporterContract
+     * @return ExporterInterface
      */
     public function setFileName($fileName)
     {
@@ -135,7 +135,7 @@ abstract class AbstractExporter implements ExporterContract
 
     /**
      * @param int $timeout
-     * @return ExporterContract
+     * @return ExporterInterface
      */
     public function setTimeout($timeout)
     {
@@ -153,7 +153,7 @@ abstract class AbstractExporter implements ExporterContract
 
     /**
      * @param array $options
-     * @return ExporterContract
+     * @return ExporterInterface
      */
     public function setConfigDefaultOptions($options)
     {
@@ -171,7 +171,7 @@ abstract class AbstractExporter implements ExporterContract
 
     /**
      * @param array $options
-     * @return ExporterContract
+     * @return ExporterInterface
      */
     public function setConfigValidOptions(array $options)
     {
@@ -203,29 +203,29 @@ abstract class AbstractExporter implements ExporterContract
 
     /**
      * @param array $config
-     * @return ExporterContract
+     * @return ExporterInterface
      */
     abstract public function configure(array $config);
 
     /**
-     * @param ReportContract $report
+     * @param ReportInterface $report
      * @return string
      */
-    abstract function generate(ReportContract $report);
+    abstract public function generate(ReportInterface $report);
 
 
     /**
      * @return string
      */
-    abstract function getMimeType();
+    abstract public function getMimeType();
 
 
     /**
      * @param boolean $forceDownload
-     * @param ReportContract $report
+     * @param ReportInterface $report
      * @return Response
      */
-    function response(ReportContract $report, $forceDownload = false)
+    public function response(ReportInterface $report, $forceDownload = false)
     {
         $file = $this->generate($report);
 

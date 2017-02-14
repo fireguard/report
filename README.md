@@ -139,7 +139,7 @@ With this example above we will find in the variable **$file** the path to the g
 ## <div id="exporters" />Exporters
 
 As we saw in the previous examples, the export of the report requires an Exporter class. An Exporter is a specialized 
-class that implements an ExporterContract interface and is responsible for catching a Report object and transforming it 
+class that implements an ExporterInterface interface and is responsible for catching a Report object and transforming it 
 into a finalized file. 
 
 At this point we have included in the package three Exporters, one for HTML, one for PDF and one for Images, it is 
@@ -162,9 +162,9 @@ possible, contribute to the project.
 
 ``configure(array $config)``: Sets the settings to apply to the current report;
 
-``generate(ReportContract $report)``: Renders the report and returns a path to the generated file;
+``generate(ReportInterface $report)``: Renders the report and returns a path to the generated file;
 
-``response(ReportContract $report, $forceDownload)``: Renders the report and returns an instance of the Symfony\Component\HttpFoundation\Response;
+``response(ReportInterface $report, $forceDownload)``: Renders the report and returns an instance of the Symfony\Component\HttpFoundation\Response;
 
 Example of use with a fluent interface:
 
@@ -292,7 +292,7 @@ file ``report.php`` generated in the integration. See below some examples of use
 ### <div id="laravel-injection-interface" /> Exporter Interface
 
 ```php
-    public function index (\Fireguard\Report\Exporters\ExporterContract $exporter)
+    public function index (\Fireguard\Report\Exporters\ExporterInterface $exporter)
     {
         $html = view()->make('welcome')->render();
         

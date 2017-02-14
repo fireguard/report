@@ -2,9 +2,9 @@
 namespace Fireguard\Report;
 
 
-use Fireguard\Report\Contracts\ReportContract;
+use Fireguard\Report\Contracts\ReportInterface;
 
-class Report implements ReportContract
+class Report implements ReportInterface
 {
     /**
      * @var string
@@ -24,7 +24,7 @@ class Report implements ReportContract
     private $config;
 
     /**
-     * ReportContract constructor.
+     * ReportInterface constructor.
      * @param string $content
      * @param string $header
      * @param string $footer
@@ -51,7 +51,7 @@ class Report implements ReportContract
 
     /**
      * @param string $content
-     * @return ReportContract
+     * @return ReportInterface
      */
     public function setContent($content)
     {

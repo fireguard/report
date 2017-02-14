@@ -1,8 +1,8 @@
 <?php
 namespace Fireguard\Report\Laravel;
 
-use Fireguard\Report\Contracts\ExporterContract;
-use Fireguard\Report\Contracts\ReportContract;
+use Fireguard\Report\Contracts\ExporterInterface;
+use Fireguard\Report\Contracts\ReportInterface;
 use Fireguard\Report\Exporters\HtmlExporter;
 use Fireguard\Report\Exporters\ImageExporter;
 use Fireguard\Report\Exporters\PdfExporter;
@@ -35,9 +35,9 @@ class ReportServiceProvider extends ServiceProvider
                         : storage_path('app');
 
         // Register Default Exporter
-        $this->app->bind( ExporterContract::class, $defaultExporter );
+        $this->app->bind( ExporterInterface::class, $defaultExporter );
 
-        $this->app->bind( ReportContract::class, Report::class );
+        $this->app->bind( ReportInterface::class, Report::class );
 
         $this->app->bind( HtmlExporter::class, function ($app) use ($storagePath) {
             return (new HtmlExporter())

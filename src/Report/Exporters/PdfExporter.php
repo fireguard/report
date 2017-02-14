@@ -1,11 +1,11 @@
 <?php
 namespace Fireguard\Report\Exporters;
 
-use Fireguard\Report\Contracts\ExporterContract;
-use Fireguard\Report\Contracts\ReportContract;
+use Fireguard\Report\Contracts\ExporterInterface;
+use Fireguard\Report\Contracts\ReportInterface;
 use PhantomInstaller\PhantomBinary;
 
-class PdfExporter extends AbstractPhantomExporter  implements ExporterContract
+class PdfExporter extends AbstractPhantomExporter  implements ExporterInterface
 {
     /**
      * @var string ['A4', 'A3', 'Letter']
@@ -21,7 +21,7 @@ class PdfExporter extends AbstractPhantomExporter  implements ExporterContract
 
     /**
      * @param array $config
-     * @return ExporterContract
+     * @return ExporterInterface
      */
     public function configure(array $config = [])
     {
@@ -38,10 +38,10 @@ class PdfExporter extends AbstractPhantomExporter  implements ExporterContract
     }
 
     /**
-     * @param ReportContract $report
+     * @param ReportInterface $report
      * @return string
      */
-    public function generate(ReportContract $report)
+    public function generate(ReportInterface $report)
     {
         $this->createHtmlFiles($report);
         return $this->saveFinishFile();
@@ -50,7 +50,7 @@ class PdfExporter extends AbstractPhantomExporter  implements ExporterContract
     /**
      * @return string
      */
-    function getMimeType()
+    public function getMimeType()
     {
         return 'application/pdf';
     }
