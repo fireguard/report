@@ -110,7 +110,7 @@ abstract class AbstractExporter implements ExporterInterface
         if ( empty($fileName)
             || (file_exists($this->getPath().$tmpFileName) && !is_writable($this->getPath().$tmpFileName) )
         ) {
-            $this->fileName = 'report-'.sha1(time());
+            $this->fileName = 'report-'.sha1(uniqid(rand(), true));
             return $this;
         }
         $this->fileName = $fileName;
