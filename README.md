@@ -394,8 +394,10 @@ file ``report.php`` generated in the integration. See below some examples of use
 
 # <div id="examples" /> Other usage examples
 <br />
-- <a href="examples/report1-html.php" target="_blank" id="use-link-html"> Generating an HTML report</a>
-- <a href="examples/report1-pdf.php" target="_blank" id="use-link-pdf"> Generating an PDF report</a>
-- <a href="examples/report1-image.php" target="_blank" id="use-link-image"> Generating an IMAGE report</a>
-- <a href="examples/report-boleto.pdf" target="_blank" id="use-link-boleto"> Sample ticket generated with this package</a>
+    <a href="examples/report1-html.php" target="_blank" id="use-link-html"> Generating an HTML report</a> <br />
+    <a href="examples/report1-pdf.php" target="_blank" id="use-link-pdf"> Generating an PDF report</a> <br />
+    <a href="examples/report1-image.php" target="_blank" id="use-link-image"> Generating an IMAGE report</a> <br />
+    <a href="examples/report-boleto.pdf" target="_blank" id="use-link-boleto"> Sample ticket generated with this package</a> 
 <br />
+
+Created by Fireguard Sistemas <a href="http://fireguard.com.br">http://fireguard.com.br</a>
